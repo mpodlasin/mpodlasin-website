@@ -17,6 +17,6 @@
         "Cache-Control": "public, max-age=31536000, immutable"
       }
     },
-    "https_only": true,
+    "https_only": false,
     "error_page": "404.html"
   }
