@@ -4,16 +4,9 @@
 
 html, body {
     font-family: 'Tajawal', Arial, Helvetica, sans-serif;
-    height: 100%;
 }
 
 .main-borders {
     border-top-left-radius: 44px;
     border-bottom-right-radius: 44px;
-}
-
-@media (min-width: 520px) {
-    .main-borders {
-        min-width: 500px;
-    }
 }

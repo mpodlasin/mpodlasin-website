@@ -1,7 +1,5 @@
 import React from "react"
-import './index.css'
-import 'typeface-tajawal';
-import me from '../images/me.jpg';
+import Layout from '../components/layout';
 
 const articles = [
     {
@@ -87,34 +85,28 @@ const articles = [
 ]
 
 const ArticlesPage = () => (
-  <div className="flex flex-col items-center h-screen p-5">
-    <div>
-        <div className="flex items-center mb-5">
-            <img className="w-20 h-20 rounded-full flex-shrink-0" src={me} />
-            <h1 className="text-4xl text-base sm:text-5xl font-extralight text-indigo-900 flex flex-grow items-center justify-center transform translate-y-2 text-center ml-8">Mateusz Podlasin</h1>
+    <Layout>
+        <div className="text-indigo-900 text-xl font-medium mt-7 mb-7">
+            <a className="pr-10" href="/">home</a>
+            <a className="pr-10" target="_blank" href="https://twitter.com/m_podlasin">twitter</a>
+            <a href="https://instagram.com/mpodlasin" target="_blank">instagram</a>
         </div>
-    </div>
-    <div className="text-indigo-900 text-xl font-medium mb-10">
-        <a className="pr-12" href="/">home</a>
-        <a className="pr-12" target="_blank" href="https://twitter.com/m_podlasin">twitter</a>
-        <a href="https://instagram.com/mpodlasin" target="_blank">instagram</a>
-    </div>
-    <div>
-        <h2 className="text-3xl font-light mb-6 text-center">Front-End {'&'} Functional Programming Articles</h2>
-        <ul>
-            {articles.map(article => (
-                <li className="border-b pb-4 pt-4">
-                    <h3 className="text-xl mb-2 font-light">{article.title}</h3>
-                    <div className="text-xl font-medium">
-                        {article.links.here && <><a className="text-indigo-900 pr-8" target="_blank" href={article.links.devto}>here</a></>}
-                        {article.links.devto && <><a className="text-indigo-900 pr-8" target="_blank" href={article.links.devto}>dev.to</a></>}
-                        {article.links.medium && <><a className="text-indigo-900" target="_blank" href={article.links.medium}>medium</a></>}
-                    </div>
-                </li>
-            ))}
-        </ul>
-    </div>
-  </div>
+        <div style={{maxWidth: 600}} className="p-5">
+            <h2 className="text-2xl sm:text-3xl font-light mb-6 text-center">Front-End {'&'} Functional Programming Articles</h2>
+            <ul>
+                {articles.map(article => (
+                    <li className="border-b pb-4 pt-4">
+                        <h3 className="text-xl mb-2 font-light">{article.title}</h3>
+                        <div className="text-xl font-medium">
+                            {article.links.here && <><a className="text-indigo-900 pr-8" target="_blank" href={article.links.devto}>here</a></>}
+                            {article.links.devto && <><a className="text-indigo-900 pr-8" target="_blank" href={article.links.devto}>dev.to</a></>}
+                            {article.links.medium && <><a className="text-indigo-900" target="_blank" href={article.links.medium}>medium</a></>}
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </div> 
+    </Layout>
 )
 
 export default ArticlesPage
