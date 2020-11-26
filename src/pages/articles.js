@@ -1,5 +1,6 @@
 import React from "react"
 import Layout from '../components/layout';
+import MainLinks from "../components/main-links";
 
 const articles = [
     {
@@ -86,11 +87,7 @@ const articles = [
 
 const ArticlesPage = () => (
     <Layout>
-        <div className="text-indigo-900 text-xl font-medium mt-7 mb-7">
-            <a className="pr-10" href="/">home</a>
-            <a className="pr-10" target="_blank" href="https://twitter.com/m_podlasin">twitter</a>
-            <a href="https://instagram.com/mpodlasin" target="_blank">instagram</a>
-        </div>
+        <MainLinks />
         <div style={{maxWidth: 600}} className="p-5">
             <h2 className="text-2xl sm:text-3xl font-light mb-6 text-center">Front-End {'&'} Functional Programming Articles</h2>
             <ul>
