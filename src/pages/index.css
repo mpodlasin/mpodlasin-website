@@ -15,11 +15,6 @@ html, body {
     margin-bottom: 20px;
 }
 
-.markdown-article code {
-    font-size: 1rem;
-    background-color: #ddd;
-}
-
 .markdown-article a {
     text-decoration: underline;
     color: #1A237E;
@@ -36,13 +31,18 @@ html, body {
     margin-left: 25px;
 }
 
-deckgo-highlight-code {
-    margin-bottom: 30px;
-    --deckgo-highlight-code-font-size: 1.3rem;
+.markdown-article p code, .markdown-article ul code {
+    font-size: 1.1rem !important;
+    background-color: #ddd;
 }
 
-@media (max-width: 450px) {
-    deckgo-highlight-code {
-        --deckgo-highlight-code-font-size: 1.1rem;
-    }
+.gatsby-highlight pre[class*="language-"] {
+    margin-bottom: 20px;
+    border-radius: 20px;
+  }
+
+@media (max-width: 700px) {
+    .gatsby-highlight pre[class*="language-"] {
+        font-size: 1rem;
+      }
 }

@@ -2,8 +2,7 @@ import React from "react"
 import { graphql } from "gatsby"
 import Layout from "../components/layout"
 import MainLinks from "../components/main-links"
-import { defineCustomElements as deckDeckGoHighlightElement } from '@deckdeckgo/highlight-code/dist/loader';
-deckDeckGoHighlightElement();
+require("prismjs/themes/prism-tomorrow.css")
 
 export default function Article({
   data
@@ -13,7 +12,7 @@ export default function Article({
   return (
     <Layout>
         <MainLinks />
-        <div style={{maxWidth: 800}} className="p-2">
+        <div style={{ width: '100%', maxWidth: 800}} className="p-2">
             <h1 className="text-5xl text-center font-light">{frontmatter.title}</h1>
             <h2 className="text-md text-center text-gray-600">Published on {frontmatter.date}</h2>
             <div
