@@ -12,7 +12,7 @@ That's why in this article we will focus on iterables & iterators only. We will 
 
 ## Introduction
 
-As you've noticed, we are talking about iterables *and* iterators. They are related, but distinct concepts, so while reading the article make sure to keep tabs on about which one we are talking at any given moment. 
+As you've noticed, we are talking about iterables *and* iterators. They are related, but distinct concepts, so while reading the article make sure to keep tabs on which one we are talking about at any given moment. 
 
 Let's begin with iterables. What are they? An iterable is basically something that can be iterated over, like so:
 
@@ -22,7 +22,7 @@ for (let element of iterable) {
 }
 ```
 
-"Wait, but these are just arrays!", you might think. And indeed, arrays are iterables. But even currently in native JavaScript, there are other data structures which we could use in a `for ... of` loop.
+"Wait, but these are just arrays!", you might think. And indeed, arrays are iterables. But even currently in native JavaScript, there are other data structures that we could use in a `for ... of` loop.
 
 For example, we can iterate over ES6 Maps:
 
@@ -250,7 +250,7 @@ class IterableObject extends Object {
 }
 ```
 
-Under the `value` property we want to place an array `[key, valueForThatKey]`. Note that this - compared to the previous steps of the example - is our own design decision. If we wanted to write an iterator that returned only keys or only property values - we might do that as well, and it would be perfectly fine. We simply decided ourselves to return key-value pairs.
+Under the `value` property we want to place an array `[key, valueForThatKey]`. Note that this - compared to the previous steps of the example - is our own design decision. If we wanted to write an iterator that returned only keys or only property values - we might do that as well, and it would be perfectly fine. We simply ourselves decided to return key-value pairs.
 
 So we will need arrays of shape `[key, valueForThatKey]`. The easiest way to obtain them is simply to use the `Object.entries` method.
 
