@@ -22,7 +22,9 @@ for (let element of iterable) {
 }
 ```
 
-"Wait, but these are just arrays!", you might think. And indeed, arrays are iterables. But even currently in native JavaScript, there are other data structures that we could use in a `for ... of` loop.
+Note that we are talking only about `for ... of` loops here, which were introduced in ES6. `for ... in` loops are an older construct and we will not use it at all in this article.
+
+You might think now, "okay, this `iterable` variable is simply an array!". And indeed, arrays are iterables. But even currently in native JavaScript, there are other data structures that we could use in a `for ... of` loop. In other words, there are more iterables in native JavaScript.
 
 For example, we can iterate over ES6 Maps:
 
@@ -202,11 +204,14 @@ const iterableObject = new IterableObject({
 })
 ```
 
-As we said, iterable needs to have a `[Symbol.iterator]()` method, so let's add it to the class:
+In order to make the `IterableObject` class *actually* iterable, it needs to have a `[Symbol.iterator]()` method. Let's add it then.
 
 ```js
 class IterableObject extends Object {
-    // same as before
+    constructor(object) {
+        super();
+        Object.assign(this, object);
+    }
 
     [Symbol.iterator]() {
 
@@ -261,9 +266,17 @@ class IterableObject extends Object {
     // same as before
 
     [Symbol.iterator]() {
+        // we made an addition here
         const entries = Object.entries(this);
 
-        // same as before
+        return {
+            next() {
+                return {
+                    value: undefined,
+                    done: false
+                }
+            }
+        }
     }
 }
 ```
@@ -278,9 +291,17 @@ class IterableObject extends Object {
 
     [Symbol.iterator]() {
         const entries = Object.entries(this);
+        // we made an addition here
         let index = 0;
 
-        // same as before
+        return {
+            next() {
+                return {
+                    value: undefined,
+                    done: false
+                }
+            }
+        }
     }
 }
 ```
@@ -294,10 +315,13 @@ class IterableObject extends Object {
     // same as before
 
     [Symbol.iterator]() {
-        // same as before
+        const entries = Object.entries(this);
+        let index = 0;
+
         return {
             next() {
                 return {
+                    // we made a change here
                     value: entries[index],
                     done: false
                 }
@@ -318,7 +342,9 @@ class IterableObject extends Object {
     // same as before
 
     [Symbol.iterator]() {
-        // same as before
+        const entries = Object.entries(this);
+        let index = 0;
+
         return {
             next() {
                 return {
@@ -349,7 +375,9 @@ class IterableObject extends Object {
     // same as before
 
     [Symbol.iterator]() {
-        // same as before
+        const entries = Object.entries(this);
+        let index = 0;
+
         return {
             next() {
                 const result = {
@@ -366,11 +394,14 @@ class IterableObject extends Object {
 }
 ```
 
-After all these changes, this is how our `[Symbol.iterator]()` method looks so far:
+After all these changes, this is how our `IterableObject` class looks so far:
 
 ```js
 class IterableObject extends Object {
-    // same as before
+    constructor(object) {
+        super();
+        Object.assign(this, object);
+    }
 
     [Symbol.iterator]() {
         const entries = Object.entries(this);
@@ -500,7 +531,7 @@ This proves how flexible your custom iterators can be. You can really make them 
 
 You will see people very often confusing iterators and iterables.
 
-Although that's a mistake and I was trying to carefully differentiate between the two in this article, there *is* an argument for using those names sort of interchangeably.
+Although that's a mistake and I was trying to carefully differentiate between the two in this article, I think I know one of the main reasons why people confuse them so often.
 
 It turns out that iterators... are sometimes iterables as well!
 
@@ -541,7 +572,7 @@ But it's actually fairly useful.
 
 You cannot plug a bare iterator into the `for ... of` loop. `for ... of` accepts only an iterable - that is an object with a `[Symbol.iterator]()` method.
 
-However, iterator being its own iterator (and hence an iterable) mitigates that problem. Because native JavaScript iterators *do* have `[Symbol.iterator]()` methods on them, you can pass them to `for ... of` loops without thinking twice.
+However, iterator being its own iterator (and hence an iterable) mitigates that problem. Since native JavaScript iterators *do* have `[Symbol.iterator]()` methods on them, you can pass them to `for ... of` loops without thinking twice.
 
 So because of that feature, both:
 
@@ -566,11 +597,15 @@ for (let element of iterator) {
 
 work without any problems and do exactly the same thing.
 
-This is especially useful if an object has many iterators associated with it.
+But why would you even want to use an iterator directly in a `for ... of` loop like that? The answer is simple - it turns out that sometimes it is simply unavoidable.
 
-For example, ES6 Map has `entries`, `values` and `keys` methods. All of them return iterators.
+First of all, you might want to simply create an iterator without any iterable to which it belongs. We will see such example later, and it's actually not *that* rare to create such "bare" iterators. Sometimes an iterable itself just isn't needed.
 
-If native iterators weren't also iterables, you couldn't just use those methods directly in `for ... of` loops:
+It would be very akward if having a bare iterator meant you couldn't just consume it via `for ... of`. It's still of course possible to do it manually with a `next` method and, for example, a `while` loop, but we've seen that it requires quite a lot of boilterplate. The matter is simple - if you want to use your iterator in a `for ... of` loop, you have to make it an iterable as well.
+
+On the other hand, you will also quite often receive iterators from methods other than `[Symbol.iterator]()`. For example, ES6 Map has `entries`, `values` and `keys` methods. All of them return iterators.
+
+If native JavaScript iterators weren't iterables as well, you couldn't just use those methods directly in `for ... of` loops like that:
 
 ```js
 for (let element of map.entries()) {
@@ -588,9 +623,11 @@ for (let element of map.keys()) {
 
 The code above works, because iterators returned by the methods are also iterables.
 
-For those reasons, it is a good practice to make your custom iterators iterables as well.
+If they weren't, we would have to awkardly wrap the results from, let's say, `map.entries()` in some kind of a dummy iterable. Luckily we don't have to and we can just use those methods directly, without worrying too much about it.
 
-It's actually very simple. Let's enhance our `IterableObject` iterator to be an iterable:
+For those reasons, it is a good practice to make your custom iterators iterables as well, *especially* if they will be returned from some methods other than `[Symbol.iterator]()`.
+
+And it's actually very simple to do. Let's enhance our `IterableObject` iterator to be an iterable:
 
 ```js
 class IterableObject extends Object {
@@ -674,9 +711,9 @@ The last log prints `{ value: undefined, done: true }` to the console.
 
 Aaah. So after the loop finishes, the iterator is now in its "done" state. It will now always return a `{ value: undefined, done: true }` object.
 
-Is there a way to reset such an iterator? 
+Is there a way to "reset" such an iterator, in order to use that exact same one in a `for ... of` loop once again?
 
-In some cases perhaps, but there is no point. This is exactly why `[Symbol.iterator]` is a method and not just a property. We can simply call that method again to obtain *another* iterator:
+In some cases perhaps, but there is really no point. This is exactly why `[Symbol.iterator]` is a method and not just a property. We can simply call that method again to obtain *another* iterator:
 
 ```js
 const ourArray = [1, 2, 3];
@@ -720,17 +757,17 @@ But there are two important distinctions to be made between the iterators and th
 
 Both of them have to do with the concept of eager and lazy values.
 
-When you create an array, at any given moment it has a specific length and its values are already initialized.
+When you create an array, at any given moment it has a specific length and its values are already initialized. I mean, sure, you can create an array wihout any values inside, but that's not what we mean here. 
 
-When saying that it has a length, we in fact mean that the array is of a finite length. There are no infinite arrays in JavaScript.
+We mean that it is impossible to create an array that initializes its value only *after* you, for example, attempt to access that value by writing `array[someIndex]`. I mean, perhaps it is *possible* with some Proxy or other JS trickery, but by default JavaScript arrays don't behave in that way. You just create an array with values initialized beforehand and that's it.
 
-And at the same time, when we say that it has its values initialized, we mean that those values already exist. They actually (physically) exist in the memory and they are stored in the array.
+And when saying that an array has a length, we in fact mean that the array is of a finite length. There are no infinite arrays in JavaScript.
 
 Those two qualities point to the *eagerness* of arrays.
 
 On the other hand, iterators are *lazy*.
 
-To show that, we will create two custom iterators - the first one will be of an infinite length and the second will initialize its values only when they are actually needed.
+To show that, we will create two custom iterators - the first one will be an infinite iterator, in contrast to finite arrays, and the second will initialize its values only when they are actually needed/requested by whoever is using the iterator.
 
 Let's start with the infinite iterator. This might sound scary, but we will create something very simple - an iterator that starts at 0 and at each step returns the next integer in a sequence. Forever.
 
@@ -758,6 +795,8 @@ Note that we used here the same trick as before - starting at -1 in order to ret
 Look also at the `done` property. It will be *always* false. This iterator never ends!
 
 Third thing, which you've probably noticed yourself - we have made this iterator an iterable, by giving it a simple `[Symbol.iterator]()` implementation.
+
+And one last note. This is the case that we've been mentioning earlier - we've created an iterator but there is no iterable in sight! This is an iterator which doesn't need an iterable "parent" for anything.
 
 We can now try out this iterator in a `for ... of` loop. We just need to remember to break out of the loop at some point - otherwise, the code would run forever!
 
