@@ -1,7 +1,7 @@
 ---
 slug: "/articles/betas/iterables-and-iterators"
 date: "2019-05-04"
-title: "Iterables & Iterators in JS - an In-Depth Tutorial"
+title: "Iterables & Iterators - An In-Depth JavaScript Tutorial"
 ---
 
 This article is the first in a three-part series. We will begin by learning about iterables & iterators. In the second article, we will deal with generators. And in the third article, we will show how to mix generators with React hooks in a neat way, in order to write much more readable code.
