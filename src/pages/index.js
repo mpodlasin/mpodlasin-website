@@ -10,6 +10,10 @@ const indexToC = [
         link: 'https://twitter.com/m_podlasin'
       },
       {
+        name: 'youtube',
+        link: 'https://www.youtube.com/channel/UCF0RK6CA9wpxVrcFbKNG2sA'
+      },
+      {
         name: 'articles',
         link: '/articles',
         internal: true
