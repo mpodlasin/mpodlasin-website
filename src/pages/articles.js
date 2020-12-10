@@ -4,6 +4,12 @@ import MainLinks from "../components/main-links";
 
 const articles = [
     {
+        title: 'Iterables & Iterators - An In-Depth JavaScript Tutorial',
+        links: {
+            here: '/articles/iterables-and-iterators'
+        }
+    },
+    {
         title: '5 things I\'ve put on my resume to stand out and get a badass job ',
         links: {
             devto: 'https://dev.to/mpodlasin/5-things-i-ve-put-on-my-resume-to-stand-out-and-get-a-badass-job-2o1n',
@@ -95,7 +101,7 @@ const ArticlesPage = () => (
                     <li className="border-b pb-4 pt-4">
                         <h3 className="text-xl mb-2 font-light">{article.title}</h3>
                         <div className="text-xl font-medium">
-                            {article.links.here && <><a className="text-indigo-900 pr-8" target="_blank" href={article.links.devto}>here</a></>}
+                            {article.links.here && <><a className="text-indigo-900 pr-8" href={article.links.here}>here</a></>}
                             {article.links.devto && <><a className="text-indigo-900 pr-8" target="_blank" href={article.links.devto}>dev.to</a></>}
                             {article.links.medium && <><a className="text-indigo-900" target="_blank" href={article.links.medium}>medium</a></>}
                         </div>

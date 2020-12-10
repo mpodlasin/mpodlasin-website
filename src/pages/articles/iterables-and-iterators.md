@@ -1,12 +1,20 @@
 ---
-slug: "/articles/betas/iterables-and-iterators"
-date: "2019-05-04"
+slug: "/articles/iterables-and-iterators"
+date: "2019-12-10"
 title: "Iterables & Iterators - An In-Depth JavaScript Tutorial"
 ---
 
-This article is the first in a three-part series. We will begin by learning about iterables & iterators. In the second article, we will deal with generators. And in the third article, we will show how to mix generators with React hooks in a neat way, in order to write much more readable code.
+Before we begin, I want to mention that this article is also available as a 3-part YouTube series, recorded by me:
 
-As a matter of fact, I planned to start with the generators article, but it quickly became obvious that they are tough to explain without a solid understanding of iterables & iterators.
+* [Basics](https://www.youtube.com/watch?v=keBYj0Un--k)
+* [Writing custom iterable/iterator](https://www.youtube.com/watch?v=r-NHOtcgtOY)
+* ["Advanced" concepts](https://www.youtube.com/watch?v=vJLRRuVzTCQ)
+
+Feel free to watch them, but if you prefer a written form, then you are in the right place.
+
+This article is an in-depth introduction to iterables and iterators in JavaScript. My main motivation for writing it was to prepare ourselves for learning generators next. In fact, later I plan to do some experimental stuff, like combining generators with React hooks. So if this sounds interesting, follow me on [Twitter](https://twitter.com/m_podlasin) or [YouTube](https://www.youtube.com/channel/UCF0RK6CA9wpxVrcFbKNG2sA) for those future articles and videos!
+
+As a matter of fact, I planned to start with the generators article, but it quickly became obvious to me, that they are tough to explain without having a solid understanding of iterables & iterators first.
 
 That's why in this article we will focus on iterables & iterators only. We will assume no previous knowledge about them, but at the same time, we will go fairly in-depth. So if you know *something* about iterables & iterators, but you still don't feel fully comfortable using them, this article should fix that.
 
@@ -905,4 +913,3 @@ This makes us more than ready to deal with generators. In fact, if you understan
 If you've enjoyed this article and want more, remember to subscribe to me on [Twitter](https://twitter.com/m_podlasin).
 
 Thanks for reading!
-
