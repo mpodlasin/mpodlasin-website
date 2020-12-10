@@ -6,7 +6,8 @@ const articles = [
     {
         title: 'Iterables & Iterators - An In-Depth JavaScript Tutorial',
         links: {
-            here: '/articles/iterables-and-iterators'
+            here: '/articles/iterables-and-iterators',
+            devto: 'https://dev.to/mpodlasin/iterables-iterators-an-in-depth-javascript-tutorial-5eh2'
         }
     },
     {
