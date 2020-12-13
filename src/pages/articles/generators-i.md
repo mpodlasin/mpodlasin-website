@@ -25,13 +25,13 @@ But there *are* problems which can be solved with generators surprisingly elegan
 
 But don't think for a second that generators are still somehow "experimental". There are a lot of projects used in production codebases that lean on generators heavily. 
 
-I guess the most popular in the React world is [redux-saga](https://redux-saga.js.org/) package, which is a middleware for Redux, allowing you to write side effects code which is extremely readable and extremaly testable at the same time (which doesn't happen that often!). 
+I guess the most popular in the React world is [redux-saga](https://redux-saga.js.org/) package, which is a middleware for Redux, allowing you to write side effects code which is extremely readable and extremely testable at the same time (which doesn't happen that often!). 
 
 I hope that those examples convinced you that it is absolutely worth learning generators. Are you now excited to study them? Let's do it then!
 
 ## Introduction
 
-If I was tasked with explaining generators only in one sentence, I would probably write - "it is a syntax sugar for producing iterators". Of course this doesn't even come close to covering everthing that generators are and can do. Nut it is not very far from the truth.
+If I was tasked with explaining generators only in one sentence, I would probably write - "it is a syntax sugar for producing iterators". Of course this doesn't even come close to covering everything that generators are and can do. But it is not very far from the truth.
 
 Let's take a basic, regular function, simply returning a number:
 
@@ -117,11 +117,11 @@ You will see the following result in the console:
 { value: undefined, done: true }
 ```
 
-So we only got our first value, an after that the iterator is stuck in it's "done" state. Interestingly the returned value is accesible only one time to use - further `next` calls just return `undefined`.
+So we only got our first value, an after that the iterator is stuck in it's "done" state. Interestingly the returned value is accessible only one time to use - further `next` calls just return `undefined`.
 
 And this behavior is actually very reasonable. It obeys a basic rule true for *all* functions - `return` always stops executing the function body, even if there is some code after the `return` statement. This is true also for generator functions.
 
-But *there is* a way to "return" mutiple values from our generator. Exactly for that purpose the keyword `yield` was introduced. Let's try that:
+But *there is* a way to "return" multiple values from our generator. Exactly for that purpose the keyword `yield` was introduced. Let's try that:
 
 ```js
 function* getNumber() {
@@ -179,7 +179,7 @@ This code outputs:
 
 Hmm. Interesting. So it does basically the same thing, but the `done` property gets set to `true` one step earlier.
 
-You probably remember that the `done` property in returned object basically decides wether the `for ... of` loop should continue running or not. 
+You probably remember that the `done` property in returned object basically decides whether the `for ... of` loop should continue running or not. 
 
 So let's check how our two versions of `getNumber` generator behave with `for ... of ` loops.
 
@@ -207,7 +207,7 @@ After running this code, we get:
 3
 ```
 
-No suprises really, that's how an iterator should behave.
+No surprises really, that's how an iterator should behave.
 
 Now let's do the same but for a generator with 2 yields and 1 return:
 
@@ -232,9 +232,9 @@ What we get:
 2
 ```
 
-Huh. Very curious. But if you think about it, this is really just how iterators behave with the `for ... of ` loop. The `done` property decides wether the next iteration step should be ran or not.
+Huh. Very curious. But if you think about it, this is really just how iterators behave with the `for ... of ` loop. The `done` property decides whether the next iteration step should be ran or not.
 
-Take a look on how in iterables article we simulated a `for ... of` loop with a `while`:
+Take a look on how in the iterables article we simulated a `for ... of` loop with a `while`:
 
 ```js
 let result = iterator.next();
@@ -407,7 +407,7 @@ console.log(iterator.next());
 console.log(iterator.next());
 ```
 
-After running that (with the generator uchanged), we get:
+After running that (with the generator unchanged), we get:
 
 ```
 start
@@ -452,7 +452,7 @@ Perhaps this result is surprising to you. After all, the first letter we've pass
 
 But it's actually fairly straight forward to see what is happening here, if we do it step by step.
 
-The rule is that a call to `next` causes the generator function to run until it encounteres a `yield <some value>` call. When this call is encountered, the `<some value>` part gets returned from the `next` call (as value in the `{ value, done }` object). From this moment on, the generator simply waits for an another `next` call. The value passed to that *another* `next` call will become the value to which the whole `yield <something>` expression gets evaluted.
+The rule is that a call to `next` causes the generator function to run until it encounters a `yield <some value>` call. When this call is encountered, the `<some value>` part gets returned from the `next` call (as value in the `{ value, done }` object). From this moment on, the generator simply waits for an another `next` call. The value passed to that *another* `next` call will become the value to which the whole `yield <something>` expression gets evaluated.
 
 Let's see it step by step on our example generator.
 
@@ -491,7 +491,7 @@ start
 
 The 1 there is precisely what we yielded in the generator. 
 
-And this point, the generator is suspended. Even the statemenent where we encountered `yield` - `const first = yield 1;` - did *not* get executed fully. After all, the generator doesn't know yet what the value of the `yield 1` part should be.
+And this point, the generator is suspended. Even the statement where we encountered `yield` - `const first = yield 1;` - did *not* get executed fully. After all, the generator doesn't know yet what the value of the `yield 1` part should be.
 
 We will providing that value with our *next* `next` call:
 
@@ -544,7 +544,7 @@ console.log(iterator.next()); // no need to pass anything on the first `next` ca
 iterator.next('b');
 ```
 
-After we've called `next` second time, generator continues to execute the code, until it encounteres *another* `yield` statement - `yield 2`. Once again, number 2 gets returned from our `next` call as a value.
+After we've called `next` second time, generator continues to execute the code, until it encounters *another* `yield` statement - `yield 2`. Once again, number 2 gets returned from our `next` call as a value.
 
 So this:
 
@@ -658,15 +658,15 @@ d
 
 And that's it! If this still seems confusing, you need to run this example by yourself, perhaps even a few times. 
 
-Help yourself by adding those succesive `next` and `console.log` calls step by step just like I did. Also try to always control in which line of the generator you currently are. 
+Help yourself by adding those successive `next` and `console.log` calls step by step just like I did. Also try to always control in which line of the generator you currently are. 
 
 Don't just read the article - run this example by yourself, as many times as necessary, to make sure that you actually understand what is happening!
 
-## Fighting nulls and undefineds with generators
+## Fighting null and undefined with generators
 
 This behavior of generators that we've just described is not complicated, but it is certainly surprising and might be difficult to grasp at the very beginning.
 
-So in this section, instead of introducting more concepts, we will pause a bit and use only what we've learned so far, while discovering a cool use-case for generators.
+So in this section, instead of introducing more concepts, we will pause a bit and use only what we've learned so far, while discovering a cool use-case for generators.
 
 Let's say that we have a function like this:
 
@@ -915,7 +915,7 @@ function* maybeAddFiveNumbers() {
 }
 ```
 
-we could run it in our wrapper as well without any issues. 
+We could run it in our wrapper as well without any issues. 
 
 This is exactly what developers find exciting about generators. They actually allow you to introduce custom functionality to the code that looks very regular (apart from `yield` calls of course).
 
@@ -930,6 +930,4 @@ We've also seen a potential use-case for the generator mechanism, which showed u
 I hope that those first exercises and examples got you excited. We still have a lot to cover with regards to generators, so make sure to follow me on [Twitter](https://twitter.com/m_podlasin) to not miss those future articles.
 
 Thanks for reading!
-
-
 
