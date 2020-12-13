@@ -13,8 +13,9 @@ export default function Article({
     <Layout>
         <MainLinks />
         <div style={{ width: '100%', maxWidth: 800}} className="p-2">
-            <h1 className="text-5xl text-center font-light">{frontmatter.title}</h1>
-            <h2 className="text-md text-center text-gray-600">Published on {frontmatter.date}</h2>
+            <h1 className="text-5xl text-center font-light mb-5">{frontmatter.title}</h1>
+            {frontmatter.subtitle && <h2 className="text-4xl text-center text-gray-500 mb-5">{frontmatter.subtitle}</h2>}
+            <div className="text-md text-center text-gray-600">Published on {frontmatter.date}</div>
             <div
             className="text-2xl font-light mt-10 markdown-article"
             dangerouslySetInnerHTML={{ __html: html }}
@@ -31,6 +32,7 @@ export const pageQuery = graphql`
         date(formatString: "DD.MM.YYYY")
         slug
         title
+        subtitle
       }
     }
   }
