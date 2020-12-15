@@ -5,13 +5,13 @@ title: "Generators - An In-Depth JavaScript Tutorial"
 subtitle: "Part I - Basics"
 ---
 
-In this series I will teach you basically everything there is to know about generators in JavaScript - what they are, how to use them and - as usual - all the intricacies involved. And as usual, we will begin with some basics, to give you an overview of that the generators are.
+In this series I will teach you basically everything there is to know about generators in JavaScript - what they are, how to use them and - as usual - all the intricacies involved. And as always, we will begin with some basics, to give you an overview of that the generators are.
 
-This series doesn't assume *any* previous knowledge about generators, but it does assume a very solid knowledge of iterables and iterators in JavaScript. If you don't know iterables/iterators, or don't really feel confident using them, make sure to check out my [previous article](/articles/iterables-and-iterators), which covers them in depth.
+This series doesn't assume *any* previous knowledge about generators. However it does assume a very solid knowledge of iterables and iterators in JavaScript. If you don't know iterables/iterators, or don't really feel confident using them, make sure to check out my [previous article](/articles/iterables-and-iterators), which covers them in depth.
 
-Learned the prerequisites? Awesome! You are ready to dive into the world of generators. It is a strange, strange world, where many things are completely different to what you are used to in a regular JavaScript code. 
+Know the prerequisites? Awesome! You are ready to dive into the world of generators. It is a strange, strange world, where many things are completely different to what you are used to in a regular JavaScript code. 
 
-But the actual mechanism is very simple, and after reading this article you will already feel confident in your capability to actually use generators by yourself.
+But the actual mechanism is very simple, and after reading this article you will feel confident in your capability to actually use generators by yourself.
 
 So let's get started!
 
@@ -31,7 +31,7 @@ I hope that those examples convinced you that it is absolutely worth learning ge
 
 ## Introduction
 
-If I was tasked with explaining generators only in one sentence, I would probably write - "it is a syntax sugar for producing iterators". Of course this doesn't even come close to covering everything that generators are and can do. But it is not very far from the truth.
+If I was tasked with explaining generators in only one sentence, I would probably write - "it is a syntax sugar for producing iterators". Of course this doesn't even come close to covering everything that generators are and can do. But it is not very far from the truth.
 
 Let's take a basic, regular function, simply returning a number:
 
@@ -41,7 +41,7 @@ function getNumber() {
 }
 ```
 
-If we were to type it using TypeScript, we would add that it returns a `number` type:
+If we were to type it using TypeScript, we would say that it returns a `number` type:
 
 ```ts
 function getNumber(): number {
@@ -69,7 +69,7 @@ function* getNumber(): Iterator<number> {
 }
 ```
 
-TypeScript compiler will allow that without any issues.
+TypeScript compiler would allow that without any issues.
 
 But that's TypeScript. Let's test if `function*` really returns an iterator in pure JavaScript.
 
@@ -117,7 +117,7 @@ You will see the following result in the console:
 { value: undefined, done: true }
 ```
 
-So we only got our first value, an after that the iterator is stuck in it's "done" state. Interestingly the returned value is accessible only one time to use - further `next` calls just return `undefined`.
+So we only got our first value, an after that the iterator is stuck in it's "done" state. Interestingly the returned value is accessible only one time for us - further `next` calls just return `undefined`.
 
 And this behavior is actually very reasonable. It obeys a basic rule true for *all* functions - `return` always stops executing the function body, even if there is some code after the `return` statement. This is true also for generator functions.
 
@@ -174,12 +174,12 @@ This code outputs:
 ```js
 { value: 1, done: false }
 { value: 2, done: false }
-{ value: 3, done: true }
+{ value: 3, done: true }  // now done is true here!
 ```
 
 Hmm. Interesting. So it does basically the same thing, but the `done` property gets set to `true` one step earlier.
 
-You probably remember that the `done` property in returned object basically decides whether the `for ... of` loop should continue running or not. 
+You probably remember that the `done` property in the returned object basically decides whether the `for ... of` loop should continue running or not. 
 
 So let's check how our two versions of `getNumber` generator behave with `for ... of ` loops.
 
@@ -234,7 +234,7 @@ What we get:
 
 Huh. Very curious. But if you think about it, this is really just how iterators behave with the `for ... of ` loop. The `done` property decides whether the next iteration step should be ran or not.
 
-Take a look on how in the iterables article we simulated a `for ... of` loop with a `while`:
+Take a look on how in the iterables article we simulated the `for ... of` loop with a `while`:
 
 ```js
 let result = iterator.next();
@@ -250,7 +250,7 @@ while (!result.done) {
 
 In that code, if you would get a `{ value: 3, done: true }` object from the `iterator.next()` call, the 3 would also never appear in the console. 
 
-That's because before `console.log(element)` gets called, we first have a `!result.done` condition. Since the condition is false for the `{ value: 3, done: true }` object, `while` body would not be executed for the number 3.
+That's because before `console.log(element)` gets called, we first have a `!result.done` condition. Since this condition is false for the `{ value: 3, done: true }` object, `while` body would not be executed for the number 3.
 
 So the rule is fairly simple - do you want a value to appear in a `for ... of` loop? `yield` it!
 
@@ -258,25 +258,7 @@ Do you want to return it from a generator, but not include it in a `for ... of` 
 
 ## Control flow in generators
 
-So far we've used `yield` statements in the form of variable assignment:
-
-```js
-const variable = yield something;
-```
-
-But that's not the only way to use them. `yield <something>` is an expression and can be used in any place where an expression is acceptable.
-
-For example, in the previous example, instead of assigning a value to the variable to then just `console.log` it, we might have logged it directly:
-
-```js
-console.log(yield something);
-```
-
-This should give you a proper intuition. 
-
-Basically, whenever a variable would be acceptable, direct `yield` expression will be acceptable as well.
-
-Going further, we must clarify that in a generator function you can use all the typical control flow constructions.
+At this point, we must clarify that in a generator function you can use all the typical control flow constructions.
 
 For example you might choose which number to yield based on an argument passed to the generator:
 
@@ -300,7 +282,7 @@ Calling `getNumber(true)` will create an iterator that returns numbers: 1, -100,
 
 Not only that, you can even use loops in generators! And that's actually where their real power comes in.
 
-In our iterables article we've created an infinite iterator, which was generating numbers 0, 1, 2, 3, ... - up to infinity. It wasn't too difficult but it wasn't the most readable thing ever.
+In our iterables article we've created an infinite iterator, which was generating numbers 0, 1, 2, 3, ... - up to infinity. It wasn't too difficult, but it wasn't the most readable code ever.
 
 Now we can do that with a generator in just few simple lines:
 
@@ -315,9 +297,9 @@ function* counterGenerator() {
 }
 ```
 
-In fact, this is the exact example that literally blew my mind when I was first learning generators. I hope that it blows your mind as well, at least a little bit.
+In fact, this is the exact example that literally blew my mind when I was first learning about generators. I hope that it blows your mind as well, at least a little bit.
 
-Just look how far have we come - we were used to functions that can only ever return a single value. And now here we are, writing a function that "returns" basically... forever.
+Just look how far we've come - we were used to functions that can only ever return a single value. And now we are writing a function that "returns" basically... forever!
 
 ## Sending values to a generator
 
@@ -360,7 +342,7 @@ In the rest of this section we will be running that exact generator multiple tim
 
 It will be *much* easier for you to understand what is happening, if you look at this generator as often as possible while we run the examples!
 
-So let's run this new generator just we did the previous one.
+So let's run this new generator just as we did the previous one.
 
 ```js
 for (let element of getNumber()) {
@@ -493,7 +475,7 @@ The 1 there is precisely what we yielded in the generator.
 
 And this point, the generator is suspended. Even the statement where we encountered `yield` - `const first = yield 1;` - did *not* get executed fully. After all, the generator doesn't know yet what the value of the `yield 1` part should be.
 
-We will providing that value with our *next* `next` call:
+We will provide that value with our *next* `next` call:
 
 ```js
 const iterator = getNumber();
@@ -544,7 +526,7 @@ console.log(iterator.next()); // no need to pass anything on the first `next` ca
 iterator.next('b');
 ```
 
-After we've called `next` second time, generator continues to execute the code, until it encounters *another* `yield` statement - `yield 2`. Once again, number 2 gets returned from our `next` call as a value.
+After we've called `next` second time, generator continued to execute the code, until it encountered *another* `yield` statement - `yield 2`. Therefore number 2 gets returned from this `next` call as a value.
 
 So this:
 
@@ -584,7 +566,7 @@ b
 c
 ```
 
-After that third `next` call, code in the generator starts being executed again, until we encounter `yield 3`. So 3 will be the value returned from that call:
+So after that third `next` call, code in the generator starts being executed again, until we encounter `yield 3`. So 3 will be the value returned from that call:
 
 ```js
 const iterator = getNumber();
@@ -658,15 +640,61 @@ d
 
 And that's it! If this still seems confusing, you need to run this example by yourself, perhaps even a few times. 
 
-Help yourself by adding those successive `next` and `console.log` calls step by step just like I did. Also try to always control in which line of the generator you currently are. 
+Help yourself by adding those successive `next` and `console.log` calls step by step just like I did. Also try to always control in which line of the generator you currently are. Remember! You have too look at the generator code at each step to really understand what is happening here!
 
 Don't just read the article - run this example by yourself, as many times as necessary, to make sure that you actually understand what is happening!
 
+## yield expression
+
+So far we only used `yield` keyword either on it's own, almost like a `return`, or we used it in such a contruction:
+
+```js
+const variable = yield something;
+```
+
+But it's important to clarify that you don't have to necesarrily write it this way.
+
+`yield something` is an expression, so you can put that part wherever an expression would be acceptable in typical JavaScript.
+
+For example, instead of storing the result of `yield something` in a variable, only to later `console.log` it, we might have as well simply write it like this:
+
+```js
+const variable = yield something;
+
+console.log(variable);
+```
+
+we might have as well simply write it like this:
+
+```js
+console.log(yield something);
+```
+
+Basically, if there is a place where you would put a variable - function call, `if` statement, right side of variable assignment - you can also use `yield something` expression directly. 
+
+So, for example, all of those are correct:
+
+```js
+someFunction(yield something);
+```
+
+```js
+if (yield something) {
+    // do stuff
+}
+```
+
+```js
+let x = yield something;
+```
+
+After all, as we've seen - when you call the `next` function, `yield something` gets "replaced" anyways with the value that you provided as an argument. So imagine that someone swaps in your code `yield something` for a value. Does it still look correct? If so, it is also correct with a `yield`.
+
 ## Fighting null and undefined with generators
 
-This behavior of generators that we've just described is not complicated, but it is certainly surprising and might be difficult to grasp at the very beginning.
+This behavior of generators that we've described so far is not complicated, but it is certainly surprising and might be difficult to grasp at the very beginning.
 
-So in this section, instead of introducing more concepts, we will pause a bit and use only what we've learned so far, while discovering a cool use-case for generators.
+So in this section, instead of introducing more concepts, we will pause a bit and use only what we've learned to this point, while discovering a cool use-case for generators.
 
 Let's say that we have a function like this:
 
@@ -679,11 +707,11 @@ function maybeAddNumbers() {
 }
 ```
 
-Functions `maybeGetNumberA` and `maybeGetNumberB` returns numbers, but sometimes they might also return `null` or `undefined` - that's what "maybe" in their names signalizes. 
+Functions `maybeGetNumberA` and `maybeGetNumberB` return numbers, but sometimes they might also return `null` or `undefined` - that's what "maybe" in their names signalizes. 
 
-When that's the case, we shouldn't try to add those values (for example a number and `null`), but rather bail out immediately and just return, let's say, `null` again.
+When that's the case, we shouldn't try to add those values (for example a number and `null`), but rather bail out immediately and just return, let's say, `null` again. After all, it's better to return `null` here, rather than some unpredictable value resulting from adding `null/undefined` with a number or with another `null/undefined`.
 
-So we have to add a check that makes sure those numbers are not `null` or `undefined`:
+So we have to add a check that makes sure those numbers are actually defined:
 
 ```js
 function maybeAddNumbers() {
@@ -698,7 +726,7 @@ function maybeAddNumbers() {
 }
 ```
 
-This works okay, but if `a` is either a `null` or `undefined`, there is really no point in calling the `maybeGetNumberB` function at all. That's because we already know that we will return a `null`.
+This works okay, but if `a` is either a `null` or an `undefined`, there is really no point in calling the `maybeGetNumberB` function at all. That's because we already know that we will return a `null`.
 
 So let's rewrite the function again:
 
@@ -722,7 +750,7 @@ function maybeAddNumbers() {
 
 Uuuh. From an easy to read 3-liner, we now have 10 lines of code (not counting empty lines). Not only that, this function is now filled with `if` cases, which you have to get through in order to understand what it does.
 
-And this is just a toy example! You can probably imagine that in actual codebases, which contain much more complex logic, those checks would become even more complicated.
+And this is just a toy example! You can imagine that in actual codebases, which contain much more complex logic, those checks would become even more complicated.
 
 So what if we could use generators here and bring back the code to it's simpler form? 
 
@@ -742,7 +770,7 @@ What if we could give `yield <maybe something>` statement the functionality of c
 If it turned out that `<maybe something>` is `null` or `undefined`, we would just bail early and return `null`, just like in the more verbose version of our code.
 
 This way we could write code that looks *almost* as if it deals only with actual, defined values.
-It's the generator itself that would check for you if that's actually the case and it would adjust accordingly! Sounds magical, doesn't it?
+It's the generator itself that would check for you if that's really the case and it would adjust accordingly! Sounds magical, doesn't it?
 
 And yet it's not only possible, it's also very easy to write!
 
@@ -800,7 +828,9 @@ function runMaybe(iterator) {
 }
 ```
 
-If however it is a defined value, we want to "give it back" to the generator. For example in `yield maybeGetNumberA()`, if it turns out that `maybeGetNumberA()` is actually a number, we just want to replace `yield maybeGetNumberA()` with the value of the number itself. 
+If however it is a defined value, we want to "give it back" to the generator. 
+
+For example in `yield maybeGetNumberA()`, if it turns out that `maybeGetNumberA()` is actually a number, we just want to replace `yield maybeGetNumberA()` with the value of the number itself. 
 
 We remember that we did this by calling `next` again and passing the value as its argument. Let's do that!
 
@@ -919,15 +949,14 @@ We could run it in our wrapper as well without any issues.
 
 This is exactly what developers find exciting about generators. They actually allow you to introduce custom functionality to the code that looks very regular (apart from `yield` calls of course).
 
-And this functionality can be literally anything you want. Generators introduce a sea of endless possibilities and the only limitation are our imaginations!
+And this functionality can be literally anything you want. Generators introduce a sea of endless possibilities and the only limitation are our imaginations! And in the following articles we will be exploring those possiblities.
 
 ## Conclusion
 
 In this article we've learned the basics of generators. How to create them, how to use `yield` keyword, how to consume them.
 
-We've also seen a potential use-case for the generator mechanism, which showed us why generators are so powerful.
+We've also seen a potential use-case for the generator mechanism, which showed us why generators are believed to be so powerful.
 
-I hope that those first exercises and examples got you excited. We still have a lot to cover with regards to generators, so make sure to follow me on [Twitter](https://twitter.com/m_podlasin) to not miss those future articles.
+I hope that those first exercises and examples got you excited to learn more. We still have a lot to cover with regards to generators, so make sure to follow me on [Twitter](https://twitter.com/m_podlasin) to not miss those future articles.
 
 Thanks for reading!
-
