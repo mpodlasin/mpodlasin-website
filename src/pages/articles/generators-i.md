@@ -690,6 +690,12 @@ let x = yield something;
 
 After all, as we've seen - when you call the `next` function, `yield something` gets "replaced" anyways with the value that you provided as an argument. So imagine that someone swaps in your code `yield something` for a value. Does it still look correct? If so, it is also correct with a `yield`.
 
+You have to be careful however when combining `yield` with operators, for example with a plus sign.
+
+`yield a + b` actually gets interpreted as `yield (a + b)`. If you wanted to yield only `a` you would have to write `(yield a) + b`.
+
+There are some rules of operator precedence, but in my experience it is the best to just get a feel for it, playing with some examples and getting a lot of practice.
+
 ## Fighting null and undefined with generators
 
 This behavior of generators that we've described so far is not complicated, but it is certainly surprising and might be difficult to grasp at the very beginning.
