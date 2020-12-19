@@ -90,7 +90,7 @@ But would it be possible to return multiple values from a generator function?
 The first thing that might've come to your mind is to use multiple returns:
 
 ```js
-funciton* getNumber() {
+function* getNumber() {
     return 1;
     return 2;
     return 3;
