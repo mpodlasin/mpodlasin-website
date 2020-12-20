@@ -5,6 +5,318 @@ title: "Generators - An In-Depth JavaScript Tutorial"
 subtitle: "Part II - Beyond Basics"
 ---
 
+## yield expression
+
+So far we only used `yield` keyword either on it's own, almost like a `return`, or we used it in such a contruction:
+
+```js
+const variable = yield something;
+```
+
+But it's important to clarify that you don't have to necesarrily write it this way.
+
+`yield something` is an expression, so you can put that part wherever an expression would be acceptable in typical JavaScript.
+
+For example, instead of storing the result of `yield something` in a variable, only to later `console.log` it, we might have as well simply write it like this:
+
+```js
+const variable = yield something;
+
+console.log(variable);
+```
+
+we might have as well simply write it like this:
+
+```js
+console.log(yield something);
+```
+
+Basically, if there is a place where you would put a variable - function call, `if` statement, right side of variable assignment - you can also use `yield something` expression directly. 
+
+So, for example, all of those are correct:
+
+```js
+someFunction(yield something);
+```
+
+```js
+if (yield something) {
+    // do stuff
+}
+```
+
+```js
+let x = yield something;
+```
+
+After all, as we've seen - when you call the `next` function, `yield something` gets "replaced" anyways with the value that you provided as an argument. So imagine that someone swaps in your code `yield something` for a value. Does it still look correct? If so, it is also correct with a `yield`.
+
+You have to be careful however when combining `yield` with operators, for example with a plus sign.
+
+`yield a + b` actually gets interpreted as `yield (a + b)`. If you wanted to yield only `a` you would have to write `(yield a) + b`.
+
+There are some rules of operator precedence, but in my experience it is the best to just get a feel for it, playing with some examples and getting a lot of practice.
+
+## Fighting null and undefined with generators
+
+This behavior of generators that we've described so far is not complicated, but it is certainly surprising and might be difficult to grasp at the very beginning.
+
+So in this section, instead of introducing more concepts, we will pause a bit and use only what we've learned to this point, while discovering a cool use-case for generators.
+
+Let's say that we have a function like this:
+
+```js
+function maybeAddNumbers() {
+    const a = maybeGetNumberA();
+    const b = maybeGetNumberB();
+
+    return a + b;
+}
+```
+
+Functions `maybeGetNumberA` and `maybeGetNumberB` return numbers, but sometimes they might also return `null` or `undefined` - that's what "maybe" in their names signalizes. 
+
+When that's the case, we shouldn't try to add those values (for example a number and `null`), but rather bail out immediately and just return, let's say, `null` again. After all, it's better to return `null` here, rather than some unpredictable value resulting from adding `null/undefined` with a number or with another `null/undefined`.
+
+So we have to add a check that makes sure those numbers are actually defined:
+
+```js
+function maybeAddNumbers() {
+    const a = maybeGetNumberA();
+    const b = maybeGetNumberB();
+
+    if (a === null || a === undefined || b === null || b === undefined) {
+        return null;
+    }
+
+    return a + b;
+}
+```
+
+This works okay, but if `a` is either a `null` or an `undefined`, there is really no point in calling the `maybeGetNumberB` function at all. That's because we already know that we will return a `null`.
+
+So let's rewrite the function again:
+
+```js
+function maybeAddNumbers() {
+    const a = maybeGetNumberA();
+
+    if (a === null || a === undefined) {
+        return null;
+    }
+
+    const b = maybeGetNumberB();
+
+    if (b === null || b === undefined) {
+        return null;
+    }
+
+    return a + b;
+}
+```
+
+Uuuh. From an easy to read 3-liner, we now have 10 lines of code (not counting empty lines). Not only that, this function is now filled with `if` cases, which you have to get through in order to understand what it does.
+
+And this is just a toy example! You can imagine that in actual codebases, which contain much more complex logic, those checks would become even more complicated.
+
+So what if we could use generators here and bring back the code to it's simpler form? 
+
+Take a look at this:
+
+```js
+function* maybeAddNumbers() {
+    const a = yield maybeGetNumberA();
+    const b = yield maybeGetNumberB();
+
+    return a + b;
+}
+```
+
+What if we could give `yield <maybe something>` statement the functionality of checking if `<maybe something>` is an actual value and not `null` or `undefined`?
+
+If it turned out that `<maybe something>` is `null` or `undefined`, we would just bail early and return `null`, just like in the more verbose version of our code.
+
+This way we could write code that looks *almost* as if it deals only with actual, defined values.
+It's the generator itself that would check for you if that's really the case and it would adjust accordingly! Sounds magical, doesn't it?
+
+And yet it's not only possible, it's also very easy to write!
+
+Of course generators themselves don't posses this functionality. They just return iterators and optionally allow you to inject some values back into the generator.
+
+So we will have to write a wrapper - let's call it `runMaybe` - which will give the generator this capability.
+
+So instead of calling the function directly:
+
+```js
+const result = maybeAddNumbers();
+```
+
+We will be calling it as an argument to that wrapper:
+
+```js
+const result = runMaybe(maybeAddNumbers());
+```
+
+This is a pattern that you will see incredibly often with generators.
+
+Generators by themselves don't do much, but by writing custom wrappers like this one, you can grant generators custom behaviors! And that's precisely what we will do right now.
+
+So `runMaybe` obviously is a function and it accepts one argument - an iterator produced by the generator:
+
+```js
+function runMaybe(iterator) {
+
+}
+```
+
+We will run this iterator in a `while` loop. In order to do that we need to call the iterator for the first time and start checking the `done` property:
+
+```js
+function runMaybe(iterator) {
+    let result = iterator.next();
+
+    while(!result.done) {
+
+    }
+}
+```
+
+Now inside a loop we have two options. If `result.value` is `null` or `undefined` we want to break the iteration process immediately and return `null`. Let's do that:
+
+```js
+function runMaybe(iterator) {
+    let result = iterator.next();
+
+    while(!result.done) {
+        if (result.value === null || result.value === undefined) {
+            return null;
+        }
+    }
+}
+```
+
+If however it is a defined value, we want to "give it back" to the generator. 
+
+For example in `yield maybeGetNumberA()`, if it turns out that `maybeGetNumberA()` is actually a number, we just want to replace `yield maybeGetNumberA()` with the value of the number itself. 
+
+We remember that we did this by calling `next` again and passing the value as its argument. Let's do that!
+
+```js
+function runMaybe(iterator) {
+    let result = iterator.next();
+
+    while(!result.done) {
+        if (result.value === null || result.value === undefined) {
+            return null;
+        }
+
+        result = iterator.next(result.value)
+    }
+}
+```
+
+And as you can see, the new result gets now stored in the `result` variable again. We've specifically declared `result` with `let` so that it's possible.
+
+We are almost there. If at any point the iterator produces a `null/undefined`, we just return a `null`. 
+
+But we need to return something also if the iteration process finishes without encountering any `null/undefined` values. After all, if we receive two actual numbers in our generator, we want to return their sum!
+
+We remember that `return <something>` in a generator causes an iterator to return an object `{ value: <something>, done: true }`. Because `done` is `true`, `while` loop stops running, but the returned value is still stored in the `result`! So at the end we can simply return it:
+
+```js
+function runMaybe(iterator) {
+    let result = iterator.next();
+
+    while(!result.done) {
+        if (result.value === null || result.value === undefined) {
+            return null;
+        }
+
+        result = iterator.next(result.value)
+    }
+
+    // just return the last value of the iteration
+    return result.value;
+}
+```
+
+And... that's it!
+
+Let's create `maybeGetNumberA` and `maybeGetNumberB` functions. Let's make them return actual numbers first:
+
+```js
+const maybeGetNumberA = () => 5;
+const maybeGetNumberB = () => 10;
+```
+
+If we run our code now and log the results:
+
+```js
+function* maybeAddNumbers() {
+    const a = yield maybeGetNumberA();
+    const b = yield maybeGetNumberB();
+
+    return a + b;
+}
+
+const result = runMaybe(maybeAddNumbers());
+
+console.log(result);
+```
+
+We will see - as expected - 15 in the console.
+
+Let's however change one of the added numbers to `null`:
+
+```js
+const maybeGetNumberA = () => null;
+const maybeGetNumberB = () => 10;
+```
+
+Now running the code logs `null`!
+
+The same happens in any of those combinations:
+
+```js
+const maybeGetNumberA = () => undefined;
+const maybeGetNumberB = () => 10;
+```
+
+```js
+const maybeGetNumberA = () => 5;
+const maybeGetNumberB = () => null;
+```
+
+```js
+const maybeGetNumberA = () => undefined;
+const maybeGetNumberB = () => null;
+```
+
+etc.
+
+The power of this example doesn't lay however in running this particular code.
+
+It lays in the fact that we've created a *general* helper, which can handle *any* generator that potentially yields `null/undefined` values.
+
+For example if we wrote a more complex function:
+
+```js
+function* maybeAddFiveNumbers() {
+    const a = yield maybeGetNumberA();
+    const b = yield maybeGetNumberB();
+    const c = yield maybeGetNumberC();
+    const d = yield maybeGetNumberD();
+    const e = yield maybeGetNumberE();
+    
+    return a + b + c + d + e;
+}
+```
+
+We could run it in our wrapper as well without any issues. 
+
+This is exactly what developers find exciting about generators. They actually allow you to introduce custom functionality to the code that looks very regular (apart from `yield` calls of course).
+
+And this functionality can be literally anything you want. Generators introduce a sea of endless possibilities and the only limitation are our imaginations! And in the following articles we will be exploring those possiblities.
 ## An iterator is more than just next()...
 
 Before we begin, I have to confess you something... In my iterators series, I haven't told you *the whole* truth about iterators... And now, before we move to generators again, I need to add some things to what I explained so far.
