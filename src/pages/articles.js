@@ -4,6 +4,12 @@ import MainLinks from "../components/main-links";
 
 const articles = [
     {
+        title: 'Generators in JavaScript, Part I - Basics',
+        links: {
+            here: '/articles/generators-i'
+        }
+    },
+    {
         title: 'Iterables & Iterators - An In-Depth JavaScript Tutorial',
         links: {
             here: '/articles/iterables-and-iterators',

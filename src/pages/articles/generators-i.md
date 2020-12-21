@@ -1,9 +1,11 @@
 ---
-slug: "/articles/betas/generators-i"
+slug: "/articles/generators-i"
 date: "2019-05-04"
 title: "Generators - An In-Depth JavaScript Tutorial"
 subtitle: "Part I - Basics"
 ---
+
+<iframe class="youtubeVideo" src="https://www.youtube.com/embed/tF-NUY_wwtE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 In this series I will teach you basically everything there is to know about generators in JavaScript - what they are, how to use them, and - as usual - all the intricacies involved. And as always, we will begin with some basics, to give you an overview of what the generators are.
 
@@ -438,7 +440,7 @@ d                                <- no more undefined
 
 Perhaps this result is surprising to you. After all, the first letter we've passed to the `next` was `a`. And yet we only see `b`, `c` and `d` here.
 
-But it's actually fairly straight forward to see what is happening here if we do it step by step.
+But it's actually fairly straightforward to see what is happening here if we do it step by step.
 
 The rule is that a call to `next` causes the generator function to run until it encounters a `yield <some value>` call. When this call is encountered, the `<some value>` part gets returned from the `next` call (as a value in the `{ value, done }` object). From this moment on, the generator simply waits for another `next` call. The value passed to that *another* `next` call will become the value to which the whole `yield <something>` expression gets evaluated.
 
