@@ -6,7 +6,8 @@ const articles = [
     {
         title: 'Generators in JavaScript, Part I - Basics',
         links: {
-            here: '/articles/generators-i'
+            here: '/articles/generators-i',
+            devto: 'https://dev.to/mpodlasin/generators-in-javascript-part-i-basics-51kg',
         }
     },
     {
