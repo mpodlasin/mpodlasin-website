@@ -7,6 +7,7 @@ const articles = [
         title: 'Generators in JavaScript, Part II - Simple use-case',
         links: {
             here: '/articles/generators-ii',
+            devto: 'https://dev.to/mpodlasin/generators-in-javascript-part-ii-simple-use-case-g6f',
         }
     },
     {
