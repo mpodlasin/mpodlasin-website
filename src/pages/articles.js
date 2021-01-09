@@ -1,4 +1,5 @@
 import React from "react"
+import { Helmet } from "react-helmet";
 import Layout from '../components/layout';
 import MainLinks from "../components/main-links";
 
@@ -107,24 +108,27 @@ const articles = [
 ]
 
 const ArticlesPage = () => (
-    <Layout>
-        <MainLinks />
-        <div style={{maxWidth: 600}} className="p-5">
-            <h2 className="text-2xl sm:text-3xl font-light mb-6 text-center">Front-End {'&'} Functional Programming Articles</h2>
-            <ul>
-                {articles.map(article => (
-                    <li className="border-b pb-4 pt-4">
-                        <h3 className="text-xl mb-2 font-light">{article.title}</h3>
-                        <div className="text-xl font-medium">
-                            {article.links.here && <><a className="text-indigo-900 pr-8" href={article.links.here}>here</a></>}
-                            {article.links.devto && <><a className="text-indigo-900 pr-8" target="_blank" href={article.links.devto}>dev.to</a></>}
-                            {article.links.medium && <><a className="text-indigo-900" target="_blank" href={article.links.medium}>medium</a></>}
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </div> 
-    </Layout>
+    <>
+        <Helmet title="Mateusz Podlasin - Front-End and Functional Programming Articles" />
+        <Layout>
+            <MainLinks />
+            <div style={{maxWidth: 600}} className="p-5">
+                <h2 className="text-2xl sm:text-3xl font-light mb-6 text-center">Front-End {'&'} Functional Programming Articles</h2>
+                <ul>
+                    {articles.map(article => (
+                        <li className="border-b pb-4 pt-4">
+                            <h3 className="text-xl mb-2 font-light">{article.title}</h3>
+                            <div className="text-xl font-medium">
+                                {article.links.here && <><a className="text-indigo-900 pr-8" href={article.links.here}>here</a></>}
+                                {article.links.devto && <><a className="text-indigo-900 pr-8" target="_blank" href={article.links.devto}>dev.to</a></>}
+                                {article.links.medium && <><a className="text-indigo-900" target="_blank" href={article.links.medium}>medium</a></>}
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div> 
+        </Layout>
+    </>
 )
 
 export default ArticlesPage
