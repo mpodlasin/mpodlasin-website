@@ -1,9 +1,11 @@
 ---
-slug: "/articles/betas/generators-iii"
+slug: "/articles/generators-iii"
 date: "2019-05-04"
 title: "Generators - An In-Depth JavaScript Tutorial"
 subtitle: 'Part III - "Advanced" Concepts'
 ---
+
+<iframe class="youtubeVideo" src="https://www.youtube.com/embed/SQnLKGhtBhs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 This is the last article in our 3 part series, where we are explaining in great detail what are generators and how they work.
 
@@ -652,7 +654,9 @@ Take two generators we already know:
 
 ```js
 function* getNumbers() {
-    yield* [-3, -2, -1];
+    yield -3;
+    yield -2;
+    yield -1;
 }
 
 function* counterGenerator() {
@@ -704,7 +708,7 @@ Of course in this example, since `counterGenerator` is infinite, `getNumbersThen
 
 I've left this section for the end because it's not really necessary to understand the *how* and *why* of generators.
 
-But leaving out this section would be dishonest and it might lead you to confusion when reading generators written by someone else.
+But leaving it out completely would be dishonest and it might lead you to confusion when reading generators written by someone else.
 
 Let's first start by noting, that you can easily turn object and class methods into generators, simply by prefixing the method name with a `*` symbol:
 
@@ -724,7 +728,7 @@ class SomeClass {
 }
 ```
 
-It is also important to stress, that you can easily declare *anonymous* generators. This might be handy when you are writing inline generators as arguments to some other functions. Remember our `runMaybe` helper? You could use it with an inline generator like this:
+It is also important to stress, that you can easily declare *anonymous* generators. This might be handy when you are writing inline generators as arguments to some other functions. Remember our `runMaybe` helper? With a little rewrite we could use it with an inline generator like this:
 
 ```js
 runMaybe(function*() {
