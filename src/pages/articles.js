@@ -8,6 +8,7 @@ const articles = [
         title: 'Generators in JavaScript, Part III - "Advanced" Concepts',
         links: {
             here: '/articles/generators-iii',
+            devto: 'https://dev.to/mpodlasin/generators-in-javascript-part-iii-advanced-concepts-ka4',
         }
     },
     {
