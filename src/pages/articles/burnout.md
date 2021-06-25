@@ -6,7 +6,7 @@ title: "I was gone from tech social media for almost half a year. Here is why. (
 
 I've posted my last tech article on January 24th, 2021.
 
-I've made my last tweet on January 28th (I use Twitter only for tech-related content).
+I've made my last tweet on January 28th.
 
 Since then I became silent for almost half a year.
 
