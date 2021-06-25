@@ -5,6 +5,13 @@ import MainLinks from "../components/main-links";
 
 const articles = [
     {
+        title: 'I was gone from tech social media for almost half a year. Here is why. (Yes, it was burnout.)',
+        links: {
+            here: '/articles/burnout',
+            devto: 'https://dev.to/mpodlasin/i-was-gone-from-tech-social-media-for-almost-half-a-year-here-is-why-yes-it-was-burnout-44ia',
+        }
+    },
+    {
         title: 'Generators in JavaScript, Part III - "Advanced" Concepts',
         links: {
             here: '/articles/generators-iii',
