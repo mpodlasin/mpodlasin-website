@@ -391,7 +391,7 @@ This will help us not get confused.
 
 Perhaps the function definition that we came up with is not at all what you expected. We moaned for so long about the importance of types, but now we've written something that borderline looks like untyped Python. What's going on? Where are those scary types?
 
-It turns out that Haskell's type system is so powerful, that most of the time it can *infer* what should be the type of a function - or of a value - you've written. Save the file, load it in `ghci` and write:
+It turns out that Haskell's type system is so powerful, that most of the time it can *infer* what should be the type of a function - or a value - you've written. Save the file, load it in `ghci` and write:
 
 ```
 t: myNot
@@ -434,7 +434,7 @@ Second of all, it's valuable to write the type of the function before writing th
 
 After all, inferred type of a function may differ from what you have intended. 
 
-Writing the type beforehand is almost like sketching or designing a function, before actually writing it. Personally, I find that writing down the type first often gives me a better idea on how to implement the function.
+Writing the type beforehand is almost like sketching or designing a function, before actually writing it. Personally, I find that writing down the type first often gives me a better idea of how to implement the function.
 
 This is an example of a skill that Haskell teaches you, that you can easily transfer to other languages. Even when I'm writing untyped JavaScript, I still always start by thinking about what kind of type signature my function will have. This helps me to write code faster and make fewer bugs, even though I have to be my own type-checker in that case.
 
@@ -456,7 +456,7 @@ What is happening here?
 
 We used what is known as pattern matching.
 
-Instead of declaring the parameter of the function as a variable named `b`, we can avoid naming it entirely and simply subsitute it with a value that will be provided to the function once it's called.
+Instead of declaring the parameter of the function as a variable named `b`, we can avoid naming it entirely and simply substitute it with a value that will be provided to the function once it's called.
 
 When we make a call `myNot True`, Haskell looks for a definition that "fits" such a call. In this case, it's the first line (not counting the type signature). If we make a call `myNot False`, then it's the second line that *matches* that call. Hence the name "pattern matching".
 
@@ -493,8 +493,8 @@ Do you want to see yet another way to write the same function? Here you go:
 ```hs
 myNot :: Bool -> Bool
 myNot b
-    | b = False
-    | otherwise = True
+ | b = False
+ | otherwise = True
 ```
 
 Arguably this way of writing the function looks the most exotic.
@@ -520,13 +520,13 @@ So, without the `otherwise` our "guarded" version of the function would look lik
 ```hs
 myNot :: Bool -> Bool
 myNot b
-    | b = False
-    | True = True
+ | b = False
+ | True = True
 ```
 
 Just as in `if then else`, a condition *has to* be a Bool value. If the last condition is set to True, like it's the case here, it will always hold and therefore it will act as a catchall case if the guards above it fail. Calling it `otherwise` is just done to make this a bit more readable.
 
-One more thing to mention here is that we used indentation. You see that lines startin with `|` characters are moved a bit to the right. If we didn't do it, and wrote the code like this:
+One more thing to mention here is that we used indentation. You see that lines starting with `|` characters are moved a bit to the right. If we didn't do it and wrote the code like this:
 
 ```hs
 myNot :: Bool -> Bool
@@ -539,14 +539,14 @@ we would get an error while loading that file in `ghci`:
 
 ```
 test.hs:3:1: error: parse error on input ‘|’
-  |
+ |
 3 | | b = False
-  | ^
+ | ^
 ```
 
 Indenting code makes it more readable for humans and - as you can see - also helps the compiler understand that a given line is still a part of the definition that began in the previous line.
 
-How much you indent the code is not actually important to the compiler - it has to be at least one space. But adding a few more spaces is better to keep the code nicely formatted for humans.
+How much you indent the code is not important to the compiler - it has to be at least one space. But adding a few more spaces is better to keep the code nicely formatted for humans.
 
 So we have written `myNot` in 3 different ways. Which one you prefer depends on you. Nevertheless, it's extremely valuable to get to know all 3 constructs that we've used - if then else, pattern matching and guards - because they appear almost all the time in Haskell code.
 
@@ -578,7 +578,7 @@ The same is true for `MyFalse`:
 MyFalse :: MyBool
 ```
 
-Unfortunately I lied to you *a bit*. If you type this in `ghci`:
+Unfortunately, I lied to you *a bit*. If you type this in `ghci`:
 
 ```
 MyTrue
@@ -588,17 +588,17 @@ You will see a mysterious message:
 
 ```
 <interactive>:68:1: error:
-    • No instance for (Show MyBool) arising from a use of ‘print’
-    • In a stmt of an interactive GHCi command: print it
+ • No instance for (Show MyBool) arising from a use of ‘print’
+ • In a stmt of an interactive GHCi command: print it
 ```
 
 It happens because `ghci` tries to simply print the value, but... It doesn't know how!
 
-This is part of the language that will cover in the future articles. Luckily we don't have to worry about it for now. Haskell can create sane default for printing, you just have to command it to do that, by adding the following line to type defintion:
+This is part of the language that will cover in future articles. Luckily we don't have to worry about it for now. Haskell can create sane default for printing, you just have to command it to do that, by adding the following line to type definition:
 
 ```hs
 data MyBool = MyTrue | MyFalse
-     deriving (Show)
+ deriving (Show)
 ```
 
 If you now call `ghci`:
@@ -613,7 +613,7 @@ It will simply print back:
 MyTrue
 ```
 
-As I said - a sane default. In the future we will learn how to customize that printing capability, but for now it's perfectly fine.
+As I said - a sane default. In the future, we will learn how to customize that printing capability, but for now, it's perfectly fine.
 
 You can now write functions that operate on this brand new type, just as we wrote a function for the built-in `Bool` type.
 
