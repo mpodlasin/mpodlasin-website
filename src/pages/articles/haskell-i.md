@@ -12,55 +12,37 @@ It doesn't assume any previous knowledge of Haskell or even functional programmi
 
 It does however assume that you can already program in **some** programming language.
 
-If you feel fairly comfortable in a language like JavaScript, Python, Java, C/C++, or anything similar, you are more than capable to go through this tutorial. Before publishing it, I have beta tested it on readers just like you. So you can rest assured that everything will be explained slowly and carefully.
+If you feel fairly comfortable in a language like JavaScript, Python, Java, C/C++, or anything similar, you are more than capable of going through this tutorial. You can rest assured that everything will be explained slowly and carefully.
 
-The main point of this series will be to highlight the differences between Haskell and those "typical" languages that I've mentioned. So the less you know about Haskell and/or functional programming, the more illuminating and mindbending my articles will be for you.
+The main point of this series will be to highlight the differences between Haskell and those "typical" languages that I've mentioned. So the less you know about Haskell and/or functional programming, the more illuminating and mindbending those articles will be for you.
 
 I will also be showing you how learning Haskell can benefit you in writing better code even when using other, more mainstream languages. If you feel stuck when it comes to your programming skills and if you feel like you haven't been stretching your coding muscles lately - Haskell will be perfect for you! 
 
-Whether you are a senior coding veteran or a junior dev that barely started your career, Haskell will push you to be an all-around better programmer. If you need more convincing, in the past I've written [why it is beneficial to learn Haskell](https://dev.to/mpodlasin/5-practical-reasons-why-your-next-programming-language-to-learn-should-be-haskell-gc), even if you don't plan to code in it professionally.
+Whether you are a senior coding veteran or a junior dev that barely started your career, Haskell will push you to be an all-around better programmer. If you need more convincing, in the past I've written about [why it is beneficial to learn Haskell](https://dev.to/mpodlasin/5-practical-reasons-why-your-next-programming-language-to-learn-should-be-haskell-gc), even if you don't plan to code in it professionally.
 
 Are you ready? Let's go then!
 
-#### Why I Learn Haskell?
-
-I would also like to begin by explaining why I personally decided to (re)learn Haskell at this point in my life.
-
-I've been coding professionally for about 6 years now. Since the very beginning of my career, I've been using JavaScript/TypeScript and React. Over and over again. In the past year, I've been noticing some serious burnout symptoms, culminating in the "burnout event" that I've documented in a [previous article](https://mpodlasin.com/articles/burnout).
-
-So I think it's clear that I need some change. 
-
-I need something that will spark my interest in coding once again. Something that will stimulate my imagination, show me new ways of doing things, and in general swap boredom for fascination.
-
-And at the current moment, I can't think of a language more fascinating and stimulating than Haskell.
-
-I used to dabble in Haskell a bit when I was studying Computer Science. And I remember that Haskell always seemed like a neverending box of bold, new, innovative, and fresh programming ideas. 
-
-It seems like a language you can never master because there is always something new on the horizon. A library that flips the language on its head, some crazy experimental extension, or an academic paper presenting an ingenious programming pattern.
-
-And that's exactly what I need right now. Fascination, imagination, wonder.
-
 #### Installing Haskellers Toolbelt
 
-If you are on this journey with me, you need to begin by installing some software needed to run Haskell.
+If you are on this journey with me, we'll begin by installing some software needed to run Haskell.
 
-But if you are still unsure/unconvinced, you don't have to do even that. I will be keeping all the examples as simple as possible, so it will be enough to just use a REPL like [this one](https://replit.com/languages/haskell). The only thing you need to do there is to empty the file in the REPL - we will start from scratch - and run `ghci` command in the terminal. You are ready now, and if you don't want to install Haskell tools on your computer you can safely omit the rest of this section.
+But if you are still unsure/unconvinced, you don't have to do even that. I will be keeping all the examples as simple as possible, so it will be enough to just use a REPL like [this one](https://replit.com/languages/haskell). The only thing you need to do there is to empty the file in the REPL - we will start from scratch - and run `ghci` command in the terminal. You are ready now, so if you don't want to install Haskell tools on your computer, you can safely omit the rest of this section.
 
 Still here? All in on learning Haskell? Awesome!
 
-The download section on [haskell.org](https://haskell.org) can be a bit confusing, so I would recommend you to go straight to [ghcup](https://www.haskell.org/ghcup/) page. You just have to copy the script from that website, paste it to your terminal and run it.
+The download section on [haskell.org](https://haskell.org) can be a bit confusing, so I would recommend you to go straight to [ghcup](https://www.haskell.org/ghcup/) page. You just have to copy the script from the website, paste it to your terminal and run it.
 
-`ghcup` is a "Haskell toolchain installer". In practice, this means that it allows you to easily install and manage various tools related to Haskell.
+`ghcup` is a "Haskell toolchain installer". This means that it allows you to easily install and manage various tools related to Haskell.
 
 The installation process guides you by hand - you will just have to answer a few questions. 
 
-The installer will ask you about installing some secondary packages like `stack` or `hls`. I would choose `yes` to all of those because they will make our Haskell adventure much easier, both at the beginning and in the future.
+The installer will ask you about installing secondary packages - `stack` and `hls`.
 
 `hls` is "Haskell Language Server". It allows IDE plugins and extensions to work seamlessly with Haskell. So it's worth having it since the very beginning.
 
 `stack` is a build tool that allows you to create isolated Haskell projects easily. This would be massive overkill for simple, one-file scripts that we will be writing at the beginning. However, once we move on to writing more complex programs, Stack will be extremely helpful. Whether you prefer to install it now or later - it's up to you.
 
-After running the script, you can test if everything went well by running the `ghci` command.
+After running the script, you can test if everything went well by running the `ghci` command in your terminal.
 
 We've mentioned quite a few tools so far, but `ghci` is the one that we will *actually* use in this article. It is an interactive environment for running Haskell code. `ghc` (no "i" at the end!) stands for Glasgow Haskell Compiler. `ghc` is in fact its own command, that will allow us to compile code into binary executables.
 
@@ -89,7 +71,7 @@ If you see this, you are ready to begin our Haskell adventure.
 
 #### Playing with Booleans
 
-A boolean (in Haskell named `Bool`) is one of the simplest and most familiar types that a programmer encounters regularly. No matter what programming language you used previously, you likely know booleans very well.
+A boolean (in Haskell named `Bool`) is one of the simplest and most familiar types that a programmer encounters regularly. No matter what programming language you've used previously, you likely know booleans very well.
 
 That's why they will be perfect for learning the basics of Haskell.
 
@@ -135,7 +117,7 @@ Let's now start writing some actual code. We will still use `ghci` to run it, bu
 
 Create a file called `lesson_1.hs` (in REPL I linked, the file is already created for you and is called `main.hs`). Note the `.hs` suffix, which represents Haskell source code files.
 
-You can create that file anywhere you want. You can also create and edit it with any type of text editor you desire. I would recommend using [Visual Studio Code](https://code.visualstudio.com), which has many handy plugins for working with Haskell.
+You can create that file anywhere you want. You can also create and edit it with any text editor you desire. I would recommend using [Visual Studio Code](https://code.visualstudio.com), which has many handy plugins for working with Haskell.
 
 After you've created the file, make sure to be - using the terminal - in the same directory where the file is located. To do that, you can leave `ghci` by running `:q`. Then switch directories to a proper one and run the `ghci` command once again. 
 
@@ -154,7 +136,7 @@ Ok, one module loaded.
 
 If you don't see that, you've likely run `ghci` in a different directory than your file is located.
 
-If you see the message, however, you are ready to begin coding!
+But if you see the message, you are ready to begin coding!
 
 So we have types (`Bool`) and values (`True` and `False`). What can we do with them? The most basic thing, known from other languages, would be to assign a value to a variable.
 
@@ -227,7 +209,7 @@ Is it even possible to write actual, real-world programs with a language like th
 
 The answer is absolutely, and we will see that quite soon. But for now, you just have to accept that - once assigned a value - you can't ever change that variable anymore.
 
-You've likely heard already about immutability. I wrote once about [immutability in JavaScript](https://dev.to/mpodlasin/functional-programming-in-js-part-ii-immutability-vanilla-js-immutable-js-and-immer-2ccm).
+You've likely heard about immutability at this point. I already wrote about [immutability in JavaScript](https://dev.to/mpodlasin/functional-programming-in-js-part-ii-immutability-vanilla-js-immutable-js-and-immer-2ccm) for example.
 
 That's the thing though. In those other, imperative languages immutability has to be introduced via some library or specific programming approach. 
 
@@ -255,13 +237,13 @@ Now, if you've coded in Python or a language with similar syntax, you might thin
 
 No. In Haskell, `not` is just a regular function.
 
-In a typical language, a function call would look like that:
+In a typical language, a function call would look something like that:
 
 ```
 not(x)
 ```
 
-But this is not the case in Haskell. In Haskell, you write the function name, and then - instead of parenthesis - you provide arguments separating them with a single space.
+But this is not the case in Haskell. In Haskell, you write the function name, and then - instead of parenthesis - you provide arguments by separating them with a single space.
 
 So to call a function `f` on a variable `x` you would write:
 
@@ -283,7 +265,7 @@ f x y z
 
 And so on. You get the idea.
 
-Let's go back to our `not` function. We called it on a variable, but of course, nothing is preventing us from calling it on values directly.
+Let's go back to our `not` function. We called it on a variable, but nothing is preventing us from calling it on values directly.
 
 In `ghci` type:
 
@@ -323,21 +305,23 @@ and you will see the following answer:
 not :: Bool -> Bool
 ```
 
-We again see the `::` symbol, which means "has type". We see the Bool type mentioned twice. The only new symbol here is `->`. As you probably expect, `<something> -> <something else>` reads as "function from \<something\> to \<something else\>".
+We again see the `::` symbol, which means "has type". We see the Bool type mentioned twice. 
 
-So the output that we got from `ghci` can be read as "not has the type of function from Bool to Bool". Or, more naturally, "not *is* a function from Bool to Bool".
+The only new symbol here is `->`. As you probably expect, `<something> -> <something else>` reads as "function from \<something\> to \<something else\>".
 
-This shouldn't be surprising. When we call `not` on a Bool value, we expect to see the Bool value as a result. If we called `not True` and got `15` as an answer, we would be extremely confused, wouldn't we?
+So the output that we got from `ghci` can be read as "`not` has the type of function from Bool to Bool". Or, more naturally, "`not` *is* a function from Bool to Bool".
+
+This shouldn't be surprising. When we call `not` on a Bool value, we expect to see the Bool value as a result - the "opposite" of what we've passed. If we called `not True` and got `15` as an answer, we would be extremely confused, wouldn't we?
 
 #### Writing Functions
 
 At this point, I would like to prove to you that there is nothing magical about `not`. If it's just a regular function, you should be able to write it by yourself, right?
 
-Yup, and that's exactly what we will do right now. You will write your first Haskell function!
+Yup, and that's exactly what we will do right now. We will write our first Haskell function!
 
 We will do that in our `lesson_1.hs` file.
 
-Under our `x` definition, write the following line:
+Under the `x` definition, write the following line:
 
 ```hs
 myNot x = if x then False else True
@@ -349,13 +333,15 @@ First, we have something that looks exactly like a call of a function - beginnin
 
 Next, we have an assignment (`=` character), after which we write the actual function - the part which we call "function body". In this case, the function body is just a simple `if then else` statement. Let's break it down.
 
-Right after the `if` keyword we have to provide a condition. Our condition is really `x == True`. But that's equivalent to simply writing `x`. After all, if `x == True` evaluates to True, this means that `x` itself has the value of True. So we've just written `x` as our condition, for brevity.
+Right after the `if` keyword we have to provide a condition. Our condition is really `x == True`. You probably recognize `==` from other languages. In Haskell it means the same thing - it's an equality operator. 
+
+But `x == True` is equivalent to simply writing `x`. After all, if `x == True` evaluates to True, this means that `x` itself has the value of True. So we can just write `x` as our condition, for brevity.
 
 If the condition in `if then else` (our `x`) evaluates to `True`, the function will return the value after the `then` keyword. If it evaluates to `False`, the function will return the value after the `else` keyword. Quite simple.
 
-So in the end we are getting a function that returns `False` if called with `True` as the parameter and returns `True` if called with `False`.
+So in the end we are getting a function that returns `False` if called with `True` and returns `True` if called with `False`.
 
-And I will admit that I used `x` as a parameter name here just to confuse you a little bit. For a second you might think that there is a naming conflict between `x` that we defined earlier and the `x` from the function.
+And I will admit that I've used `x` as a parameter name here just to confuse you a little bit. For a second you might think that there is a naming conflict between `x` that we defined earlier and the `x` from the function.
 
 You can however convince yourself that that's not true, by loading the file again in `ghci`. It loads properly, without any errors. On top of that, our newly defined function `myNot` actually works.
 
@@ -389,7 +375,7 @@ False
 
 That is correct because in the file we assigned `x` to `True`.
 
-So there is no naming conflict, but *it is* true that we are "shadowing" the `x` variable. If we now wanted to use it in the function body, we couldn't, because we decided to give the parameter the same name.
+So there is no naming conflict, but *it is* true that we are "shadowing" the `x` variable. If we now wanted to use it in the function body, we couldn't, because we decided to give the same name to the function parameter.
 
 So, just for clarity, let's change the name of the function parameter to `b` (as in "boolean").
 
@@ -405,7 +391,7 @@ This will help us not get confused.
 
 Perhaps the function definition that we came up with is not at all what you expected. We moaned for so long about the importance of types, but now we've written something that borderline looks like untyped Python. What's going on? Where are those scary types?
 
-It turns out that Haskell's type system is so powerful, that many times it can *infer* what should be the type of the function you've written. Save the file, load it in `ghci` and write:
+It turns out that Haskell's type system is so powerful, that most of the time it can *infer* what should be the type of a function - or of a value - you've written. Save the file, load it in `ghci` and write:
 
 ```
 t: myNot
@@ -421,17 +407,17 @@ So indeed your custom `myNot` function has the same type as the original `not`. 
 
 It's quite straightforward.
 
-Since you wrote `if x then ...`, using `x` as a condition, Haskell knew that parameter `x` had to be a Bool. That's because Haskell is (again!) quite strict here and only the value of Bool type can be used as a condition in the `if then else` construct. (Note that we've written *"as a condition"* here! It's completely fine to provide values of other types after `then` and `else` keywords - we will see that in future articles.)
+Since you wrote `if x then ...`, using `x` as a condition, Haskell knew that parameter `x` had to be a Bool. That's because Haskell is (again!) quite strict here and only the value of type Bool can be used as a condition in the `if then else` construct. (Note that we've written *"as a condition"* here! It's completely fine to provide values of other types after `then` and `else` keywords - we will see that in future articles.)
 
-And at the same time, you wrote `then False else True`. Here, in both cases ("then" case and "else" case) you are returning a Bool. Therefore the output of your function has type Bool.
+And at the same time, you wrote `then False else True`. Here, in both cases ("then" case and "else" case) you are returning a Bool. Therefore the output of your function has type Bool as well.
 
 Those two facts combined bring us to a conclusion that the type of `myNot` has to be `Bool -> Bool`.
 
-Haskell inference is extremely good and the compiler might only have problems if you write something that is inherently vague.
+Haskell inference is extremely good and the compiler may only have problems if you write something that is inherently vague.
 
 And yet it is still recommended to put the type signature of the function in the code. You will see that in the vast majority of Haskell codebases the types are always written explicitly.
 
-You can do it simply by writing the type of the function above its definition:
+You can do it by writing the type of the function above its definition:
 
 ```hs
 myNot :: Bool -> Bool
@@ -440,19 +426,19 @@ myNot x = if x then False else True
 
 Writing down the type in the code has some major advantages.
 
-First of all, it increases the readability of the code. Types are incredibly useful as documentation of what your function does. In Haskell, you will often be able to infer what a given function does simply by looking at its name and type signature.
+First of all, it increases the readability of the code. Types are incredibly useful as documentation of what your function does. In Haskell, you will often be able to find out what a given function does simply by looking at its name and type signature. No need to read the implementation!
 
-Function called `not` that has type `Bool -> Bool`? It surely must negate the booleans!
+Function called `not` that has type `Bool -> Bool`? It surely must be a function negating the booleans!
 
 Second of all, it's valuable to write the type of the function before writing the function definition itself. If you do that, Haskell's type system will "guide you" and help validate that your code works as expected.
 
 After all, inferred type of a function may differ from what you have intended. 
 
-Writing the type beforehand is almost like sketching or designing the function, before actually writing it. Personally, I find that writing down the type first often gives me a better idea of how to implement the function.
+Writing the type beforehand is almost like sketching or designing a function, before actually writing it. Personally, I find that writing down the type first often gives me a better idea on how to implement the function.
 
 This is an example of a skill that Haskell teaches you, that you can easily transfer to other languages. Even when I'm writing untyped JavaScript, I still always start by thinking about what kind of type signature my function will have. This helps me to write code faster and make fewer bugs, even though I have to be my own type-checker in that case.
 
-So we have successfully replicated the `not` function - `myNot` has the same type **and** behaves in the same way. Running `myNot True` evaluates to `False`, running `myNot False` evaluates to `True`.
+So we have successfully replicated the `not` function - `myNot` has the same type *and* behaves in the same way. Running `myNot True` evaluates to `False`, running `myNot False` evaluates to `True`.
 
 But let's stay on this topic a bit longer and try to write the same function in a completely different manner.
 
@@ -470,11 +456,11 @@ What is happening here?
 
 We used what is known as pattern matching.
 
-Instead of declaring the first (and only) parameter of the function as a variable named `b`, we can avoid naming that parameter entirely and we can simply match it with a value that will be provided to the function once it's called.
+Instead of declaring the parameter of the function as a variable named `b`, we can avoid naming it entirely and simply subsitute it with a value that will be provided to the function once it's called.
 
-When we make a call `myNot True`, Haskell looks for a definition that "fits" such a call. In this case, it's the first line (after the type signature). If we make a call `myNot False`, then the second line *matches* that call. Hence the name "pattern matching".
+When we make a call `myNot True`, Haskell looks for a definition that "fits" such a call. In this case, it's the first line (not counting the type signature). If we make a call `myNot False`, then it's the second line that *matches* that call. Hence the name "pattern matching".
 
-Hopefully, it's clear that if you call `myNot` with a variable, not an actual value, pattern matching will still work just fine.
+Hopefully, it's clear that if you call `myNot` with a variable, not an actual value, pattern matching will still work just fine. In that case, Haskell simply evaluates the value of the variable and performs pattern matching then.
 
 So with this new definition, calling:
 
@@ -492,7 +478,7 @@ So we have two versions of the same function:
 
 ```hs
 myNot :: Bool -> Bool
-myNot x = if x then False else True
+myNot b = if b then False else True
 ```
 ```hs
 myNot :: Bool -> Bool
@@ -507,11 +493,11 @@ Do you want to see yet another way to write the same function? Here you go:
 ```hs
 myNot :: Bool -> Bool
 myNot b
- | b = False
- | otherwise = True
+    | b = False
+    | otherwise = True
 ```
 
-Arguably this way of writing the function looks the most exotic and the most challenging.
+Arguably this way of writing the function looks the most exotic.
 
 It uses what is known as "guards". A guard is basically a condition, which is placed between `|` and `=` characters. When the condition is satisfied, a function body that is defined after `=` gets executed.
 
@@ -519,7 +505,7 @@ In our case, the first guard is `b == True`. But - just as before - we can write
 
 Otherwise (so when `b` is not True), the function body that returns True will be executed.
 
-Interestingly, there is nothing magical about the keyword `otherwise`. (Are you noticing a pattern, where some "feature" of the language is not really a feature, but simply something coded in that language?)
+Interestingly, there is nothing magical about the keyword `otherwise`. (Are you noticing a pattern here, where some "feature" of the language is not really a feature, but simply something coded in that language?)
 
 You can convince yourself that this is true by writing `otherwise` in the `ghci` console. As a response you will see:
 
@@ -534,13 +520,35 @@ So, without the `otherwise` our "guarded" version of the function would look lik
 ```hs
 myNot :: Bool -> Bool
 myNot b
- | b = False
- | True = True
+    | b = False
+    | True = True
 ```
 
-Just as in `if then else`, a condition has to be a Bool value. If we set the last condition to be True, it will always hold and therefore it will act as a catchall case if the guards above it fail. Calling it `otherwise` is something done simply to make this a bit more readable.
+Just as in `if then else`, a condition *has to* be a Bool value. If the last condition is set to True, like it's the case here, it will always hold and therefore it will act as a catchall case if the guards above it fail. Calling it `otherwise` is just done to make this a bit more readable.
 
-So we have written `myNot` in 3 different ways. Which one you prefer depends on you. Nevertheless, it's extremely valuable to get to know 3 constructs that we've used - if then else, pattern matching and guards - because they appear almost all the time in Haskell code.
+One more thing to mention here is that we used indentation. You see that lines startin with `|` characters are moved a bit to the right. If we didn't do it, and wrote the code like this:
+
+```hs
+myNot :: Bool -> Bool
+myNot b
+| b = False
+| True = True
+```
+
+we would get an error while loading that file in `ghci`:
+
+```
+test.hs:3:1: error: parse error on input ‘|’
+  |
+3 | | b = False
+  | ^
+```
+
+Indenting code makes it more readable for humans and - as you can see - also helps the compiler understand that a given line is still a part of the definition that began in the previous line.
+
+How much you indent the code is not actually important to the compiler - it has to be at least one space. But adding a few more spaces is better to keep the code nicely formatted for humans.
+
+So we have written `myNot` in 3 different ways. Which one you prefer depends on you. Nevertheless, it's extremely valuable to get to know all 3 constructs that we've used - if then else, pattern matching and guards - because they appear almost all the time in Haskell code.
 
 We used them in separation here, but in the future, you will see that you can mix those constructs in various ways, especially when writing more complex code.
 
@@ -570,7 +578,44 @@ The same is true for `MyFalse`:
 MyFalse :: MyBool
 ```
 
-You can now write functions that operate on those types, just as we wrote a function for the built-in `Bool` type.
+Unfortunately I lied to you *a bit*. If you type this in `ghci`:
+
+```
+MyTrue
+```
+
+You will see a mysterious message:
+
+```
+<interactive>:68:1: error:
+    • No instance for (Show MyBool) arising from a use of ‘print’
+    • In a stmt of an interactive GHCi command: print it
+```
+
+It happens because `ghci` tries to simply print the value, but... It doesn't know how!
+
+This is part of the language that will cover in the future articles. Luckily we don't have to worry about it for now. Haskell can create sane default for printing, you just have to command it to do that, by adding the following line to type defintion:
+
+```hs
+data MyBool = MyTrue | MyFalse
+     deriving (Show)
+```
+
+If you now call `ghci`:
+
+```
+MyTrue
+```
+
+It will simply print back:
+
+```
+MyTrue
+```
+
+As I said - a sane default. In the future we will learn how to customize that printing capability, but for now it's perfectly fine.
+
+You can now write functions that operate on this brand new type, just as we wrote a function for the built-in `Bool` type.
 
 So if we wanted `myNot` to work on that custom `MyBool` type, we would do it like that:
 
@@ -601,7 +646,7 @@ myBoolToBool MyTrue = True
 myBoolToBool MyFalse = False
 ```
 
-We used two different ways to write a function on purpose here. Note that we wouldn't be able to use `if then else` with `MyBool` type as a conditional, because it works only on the built-in `Bool` type. 
+We used two different ways to write a function on purpose here. Note that we wouldn't be able to use `if then else` with `MyBool` type as a conditional, because it works only on the built-in `Bool` type.
 
 But on the other hand, we can use pattern matching in both, because pattern matching works with custom-defined values without any problems.
 
@@ -687,7 +732,7 @@ In time you will discover that this allows you to understand code much faster, e
 
 #### Conclusion
 
-So we had a bit of functional fun with Bools in Haskell, serving as our introductory lesson in that language.
+So we played with Bools in Haskell, serving as our introductory lesson in that language.
 
 We've learned the basics of Haskell's syntax, we've seen how to create and use functions, and even how to create some simple datatypes.
 
