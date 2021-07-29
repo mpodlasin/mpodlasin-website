@@ -117,7 +117,9 @@ Let's now start writing some actual code. We will still use `ghci` to run it, bu
 
 Create a file called `lesson_1.hs` (in REPL I linked, the file is already created for you and is called `main.hs`). Note the `.hs` suffix, which represents Haskell source code files.
 
-You can create that file anywhere you want. You can also create and edit it with any text editor you desire. I would recommend using [Visual Studio Code](https://code.visualstudio.com), which has many handy plugins for working with Haskell.
+You can create that file anywhere you want. You can also edit it with any text editor you desire. 
+
+I would recommend using [Visual Studio Code](https://code.visualstudio.com). After installing VS Code, immediately go to the "Extensions" tab (on the left) and install the "Haskell" extension. It will give you many handy features. It will for example start displaying the types of values you hover over. If you have trouble with the extension "not detecting `ghc`", remember to edit the PATH in the `.bashrc`/`.zshrc` file, just like I described in the setup section. After that restart the editor.
 
 After you've created the file, make sure to be - using the terminal - in the same directory where the file is located. To do that, you can leave `ghci` by running `:q`. Then switch directories to a proper one and run the `ghci` command once again. 
 
@@ -331,7 +333,7 @@ Let's break down what is happening here a little bit.
 
 First, we have something that looks exactly like a call of a function - beginning with the name (`myNot`), and later the parameters of the function, separated by spaces. In this particular case, we have only one parameter, which we named `x`.
 
-Next, we have an assignment (`=` character), after which we write the actual function - the part which we call "function body". In this case, the function body is just a simple `if then else` statement. Let's break it down.
+Next, we have an assignment (`=` character), after which we write the actual function - the part which we call "function body". In this case, the function body is just a simple `if then else` expression. Let's break it down.
 
 Right after the `if` keyword we have to provide a condition. Our condition is really `x == True`. You probably recognize `==` from other languages. In Haskell it means the same thing - it's an equality operator. 
 
@@ -339,9 +341,27 @@ But `x == True` is equivalent to simply writing `x`. After all, if `x == True` e
 
 If the condition in `if then else` (our `x`) evaluates to `True`, the function will return the value after the `then` keyword. If it evaluates to `False`, the function will return the value after the `else` keyword. Quite simple.
 
-So in the end we are getting a function that returns `False` if called with `True` and returns `True` if called with `False`.
+Note that in Haskell `if then else` is an *expression*. This means that in the end, it evaluates to a value - one of the two provided after "then" and "else" keywords. In JavaScript for example this means that it has more common with a ternary operator, rather than regular `if/else` *statement*.
 
-And I will admit that I've used `x` as a parameter name here just to confuse you a little bit. For a second you might think that there is a naming conflict between `x` that we defined earlier and the `x` from the function.
+The following code in JavaScript:
+
+```js
+const someVariable = condition ? firstValue : secondValue;
+```
+
+would be therefore equivalent to the following in Haskell:
+
+```hs
+someVariable = if condition then firstValue else secondValue
+```
+
+Let's return to the definition of our function:
+
+```hs
+myNot x = if x then False else True
+```
+
+I will admit that I've used `x` as a parameter name here just to confuse you a little bit. For a second you might think that there is a naming conflict between `x` that we defined earlier and the `x` from the function.
 
 You can however convince yourself that that's not true, by loading the file again in `ghci`. It loads properly, without any errors. On top of that, our newly defined function `myNot` actually works.
 
