@@ -5,6 +5,12 @@ import MainLinks from "../components/main-links";
 
 const articles = [
     {
+        title: 'Haskell - The Most Gentle Introduction Ever',
+        links: {
+            here: '/articles/haskell-i',
+        }
+    },
+    {
         title: 'I was gone from tech social media for almost half a year. Here is why. (Yes, it was burnout.)',
         links: {
             here: '/articles/burnout',
