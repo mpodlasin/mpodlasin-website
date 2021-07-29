@@ -4,7 +4,7 @@ date: "2021-07-25"
 title: "Haskell - The Most Gentle Introduction Ever"
 ---
 
-#### Who is That Article For?
+#### Who Is This Article For?
 
 This article is the first in (hopefully) a series on functional programming in Haskell.
 
@@ -69,7 +69,7 @@ Prelude>
 
 If you see this, you are ready to begin our Haskell adventure.
 
-#### Playing with Booleans
+#### Playing With Booleans
 
 A boolean (in Haskell named `Bool`) is one of the simplest and most familiar types that a programmer encounters regularly. No matter what programming language you've used previously, you likely know booleans very well.
 
