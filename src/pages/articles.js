@@ -8,6 +8,7 @@ const articles = [
         title: 'Haskell - The Most Gentle Introduction Ever',
         links: {
             here: '/articles/haskell-i',
+            devto: 'https://dev.to/mpodlasin/haskell-the-most-gentle-introduction-ever-32ho',
         }
     },
     {
