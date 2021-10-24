@@ -5,8 +5,6 @@ title: "Generators - An In-Depth JavaScript Tutorial"
 subtitle: 'Part III - "Advanced" Concepts'
 ---
 
-<iframe class="youtubeVideo" src="https://www.youtube.com/embed/SQnLKGhtBhs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
 This is the last article in our 3 part series, where we are explaining in great detail what are generators and how they work.
 
 This however doesn't mean that we are finishing dealing with generators just yet. In future articles, as I've been promising for a long time now, we will continue exploring their capabilities, this time in a more practical setting - namely using them with React.

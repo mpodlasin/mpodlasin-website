@@ -5,8 +5,6 @@ title: "Generators - An In-Depth JavaScript Tutorial"
 subtitle: "Part II - Simple use-case"
 ---
 
-<iframe class="youtubeVideo" src="https://www.youtube.com/embed/d9AVOH-fCK0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
 The behavior of generators that we've described in the [previous article](/articles/generators-i) is not complicated, but it is certainly surprising and might be difficult to grasp at the very beginning.
 
 So in this article, instead of introducing more concepts, we will pause a bit and use only what we've learned to this point while discovering a cool use-case for generators.

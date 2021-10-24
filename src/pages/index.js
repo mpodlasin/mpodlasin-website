@@ -15,10 +15,6 @@ const indexToC = [
         name: 'twitter',
         link: 'https://twitter.com/m_podlasin'
       },
-      {
-        name: 'youtube',
-        link: 'https://www.youtube.com/channel/UCF0RK6CA9wpxVrcFbKNG2sA'
-      },
     ]
   },
   {

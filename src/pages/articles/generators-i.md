@@ -5,8 +5,6 @@ title: "Generators - An In-Depth JavaScript Tutorial"
 subtitle: "Part I - Basics"
 ---
 
-<iframe class="youtubeVideo" src="https://www.youtube.com/embed/tF-NUY_wwtE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
 In this series I will teach you basically everything there is to know about generators in JavaScript - what they are, how to use them, and - as usual - all the intricacies involved. And as always, we will begin with some basics, to give you an overview of what the generators are.
 
 This series doesn't assume *any* previous knowledge about generators. However, it does assume a very solid knowledge of iterables and iterators in JavaScript. If you don't know iterables/iterators, or don't really feel confident using them, make sure to check out my [previous article](/articles/iterables-and-iterators), which covers them in-depth.
