@@ -5,9 +5,10 @@ import MainLinks from "../components/main-links";
 
 const articles = [
     {
-        title: 'Haskell - The Most Gentle Introduction Ever (part II)',
+        title: 'Haskell - The Most Gentle Introduction Ever (Part II)',
         links: {
             here: '/articles/haskell-ii',
+            devto: 'https://dev.to/mpodlasin/haskell-the-most-gentle-introduction-ever-part-ii-7lm',
         }
     },
     {

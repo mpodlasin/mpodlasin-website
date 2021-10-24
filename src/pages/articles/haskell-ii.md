@@ -6,7 +6,7 @@ title: "Haskell - The Most Gentle Introduction Ever (Part II)"
 
 This is the second article in my little series explaining the basics of Haskell.
 
-If you haven't yet, I would recommend you to read [the first article](https://mpodlasin.com/articles/haskell-ii), before diving into this one.
+If you haven't yet, I would recommend you to read [the first article](https://mpodlasin.com/articles/haskell-i), before diving into this one.
 
 So far we've learned the basics of defining functions and datatypes, as well as using them, all based on the Haskell `Bool` type.
 
