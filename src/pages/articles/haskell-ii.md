@@ -18,7 +18,7 @@ Before we begin this section, I must warn you. In the previous article, I purpos
 
 You might think that types representing numbers would be equally simple in Haskell. However, that's not *really* the case.
 
-Not only Haskell has quite a lot of types representing numbers, but there is also a significant effort in the language to make those types as interoperable as possible. Because of that, there is a certain amount of complexity, which can be confusing for beginners.
+Not only Haskell has quite a lot of types representing numbers, but there is also a significant effort in the language to make those types as interoperable with eachother as possible. Because of that, there is a certain amount of complexity, which can be confusing to beginners.
 
 To see that, type in the following in the `ghci`:
 
@@ -26,7 +26,7 @@ To see that, type in the following in the `ghci`:
 :t 5
 ```
 
-You would would probably expect to see something simple and concrete, like `Number` or `Int`. However, what we see is this:
+You would probably expect to see something simple and concrete, like `Number` or `Int`. However, what we see is this:
 
 ```hs
 5 :: Num p => p
@@ -38,11 +38,15 @@ For a brief second try to ignore that whole `Num p =>` part. If it wasn't there,
 
 This is the first time we see the name of the type being written using a small letter. That's important. Indeed, `p` is not a specific type. It is a *type variable*. This means that `p` can be potentially many different, concrete types.
 
-It wouldn't however make sense for `5` to have - for example - `Bool` type. That would be nonsense. That's why `Num p =>` part is also written in the type description. It basically says that this `p` has to be a *numeric* type. So, overall, `5` has type `p`, as long as `p` is a *numeric* type. For example, writing `5 :: Bool` would be forbidden, thanks to that restriction.
+It wouldn't however make sense for `5` to have - for example - `Bool` type. That's why `Num p =>` part is also written in the type description. It basically says that this `p` has to be a *numeric* type. 
 
-The exact mechanism at play here will not be discussed right now. We still have to cover a few basics before we can explain it fully and in details. But perhaps you've heard it about it already - it's called *typeclasses*. We will learn about typeclasses very soon, and after we do, this whole type description will be absolutely clear to you.
+So, overall, `5` has type `p`, as long as `p` is a *numeric* type. For example, writing `5 :: Bool` would be forbidden, thanks to that restriction.
 
-For now, however, we don't really need to go into specifics. Throughout this article, we will use concrete, specific types, so that you don't get confused. I am just warning you about the existence of this mechanism so that you don't get unpleasantly surprised and discouraged when you investigate the types of functions or values on your own. Which I encourage you to do! Half of reading Haskell is reading types, and you should be getting used to that.
+The exact mechanism at play here will not be discussed right now. We still have to cover a few basics before we can explain it fully and in details. But perhaps you've heard it about it already - it's called *typeclasses*. We will learn about typeclasses very soon. After we do, this whole type description will be absolutely clear to you.
+
+For now, however, we don't really need to go into specifics. Throughout this article, we will use concrete, specific types, so that you don't get confused. I am just warning you about the existence of this mechanism so that you don't get unpleasantly surprised and discouraged when you investigate the types of functions or values on your own. 
+
+Which I encourage you to do! Half of reading Haskell is reading the types, and you should be getting used to that.
 
 #### Functions and Operators
 
@@ -62,19 +66,19 @@ results in a fairly reasonable answer:
 
 But to get a deeper insight into what is happening there, let's write a "wrapper" function for adding numbers.
 
-We will call it `add` and we will want to use it like so:
+We will call it `add` and we will use it like so:
 
 ```hs
 add 5 7
 ```
 
-And in effect we should see exactly the same answer as just a moment ago:
+As a result, we should see exactly the same answer as just a moment ago:
 
 ```hs
 12
 ```
 
-We would like to of course begin with a type signature of that function. What could it potentially be?
+We would like to, of course, begin with a type signature of that function. What could it potentially be?
 
 ```hs
 add :: ???
@@ -86,9 +90,9 @@ Let's say that we want to work only with integers for now. Even for integers, th
 
 The two most basic ones are `Integer` and `Int`.
 
-`Int` is a type that is "closer to the machine". It's a "fixed precision" integer type. This means that - depending on the architecture of your computer - each `Int` will have a limited number of bits reserved for its value. Going out of those bounds can result in confusing errors. This is a type very similar to C/C++ `int` type.
+`Int` is a type that is "closer to the machine". It's a so-called fixed precision integer type. This means that - depending on the architecture of your computer - each `Int` will have a limited number of bits reserved for its value. Going out of those bounds can result in errors. This is a type very similar to C/C++ `int` type.
 
-`Integer` on the other hand is an "arbitrary precision" integer type. This means that the values can get potentially bigger than those of `Int`. Haskell will just reserve more memory if that becomes necessary. So those integers are arbitrarily large, but only in principle - if you completely run out of computer memory, nothing will save you, of course.
+`Integer` on the other hand is an arbitrary precision integer type. This means that the values can potentially get bigger than those of `Int`. Haskell will just reserve more memory if that becomes necessary. So those integers are "arbitrarily" large, but, of course, only in principle - if you completely run out of computer memory, nothing can save you.
 
 At the first glance it would seem that `Integer` has some clear advantages. That being said, `Int` is still being widely used where memory efficiency is important or where we have high confidence that numbers will not become too large.
 
@@ -102,7 +106,7 @@ What we have written here is probably a bit confusing at the first glance.
 
 So far, we've only written declarations of functions that accept a single value and return a single value.
 
-But when adding numbers, we have to accept two values as parameters (two numbers to add) and then return a single result (number resulting from adding two numbers). So in our type signature about, the first two `Integer`s represent parameters and the last `Integer` represents the return value.
+But when adding numbers, we have to accept *two* values as parameters (two numbers to add) and then return a single result (a sum of those numbers). So in our type signature, the first two `Integer` types represent parameters and the last `Integer` represents the return value:
 
 ```hs
 add :: Integer {- 1st parameter -} -> Integer {- 2nd parameter -} -> Integer {- return value -}
@@ -119,13 +123,13 @@ add x y = x + y
 
 Simple, right?
 
-Create a file called `lesson_02.hs` and write that definition. Next, load the file in `ghci` (by running `:l lesson_02.hs`) and type:
+Create a file called `lesson_02.hs` and write down that definition. Next, load the file in `ghci` (by running `:l lesson_02.hs`) and type:
 
 ```hs
 add 5 7
 ```
 
-As expected, you will see the reasonable response.
+As expected, you will see the reasonable response:
 
 ```hs
 12
@@ -159,7 +163,7 @@ look eerily similar.
 
 That's not an accident. 
 
-Indeed, you can do reverse, and call the `+` operator as you would call a regular function - in front of the parameters. If it's an operator, you just have to wrap it in parentheses:
+Indeed, you can do the reverse, and call the `+` operator as you would call a regular function - in front of the parameters. If it's an operator, you just have to wrap it in parentheses:
 
 ```hs
 (+) 5 7
@@ -189,6 +193,10 @@ results in:
 
 This means that `+` has type `a -> a -> a`, where `a` has to be a numeric type. So it's a function that accepts two parameters of numeric type `a` and returns the result of the same type.
 
+I hope that at this point it makes sense why it is beneficial for `+` operator to have such an abstract definition. A clear benefit `+` has over our custom `add` function is that `+` works on *any* numeric type. No matter if it's `Integer`, `Int`, or any other type that somehow represents a number - `+` can be used on it. Meanwhile our `add` function works literally only on `Integer` types. For example, if you try to call it on - very similar - `Int` numbers, the call will fail.
+
+So you can see that complexity introduced in number types doesn't come out of nowhere. It keeps the code typesafe, while still allowing a huge flexibility. Types might seem complex, but this makes writing actual implementations a breeze.
+
 #### Partial Application
 
 Let's go back to the type of `add` function, which is probably still friendlier to read at this point.
@@ -197,7 +205,7 @@ Let's go back to the type of `add` function, which is probably still friendlier 
 add :: Integer -> Integer -> Integer
 ```
 
-The way we have written the type definition of a function accepting two parameters might be surprising to you. We see two `->` arrows in the definition, almost suggesting that we are dealing with two functions here.
+The way we have written the type definition here might be surprising to you. We see two `->` arrows in the definition, almost suggesting that we are dealing with two functions.
 
 And indeed we are!
 
@@ -207,7 +215,7 @@ To increase the readability even more, we can use the fact that `->` is right-as
 add :: Integer -> (Integer -> Integer)
 ```
 
-Let's on the part that is outside of parentheses first:
+Let's focus on the part that is outside of parentheses first:
 
 ```hs
 add :: Integer -> (...)
@@ -235,9 +243,9 @@ I was saying that this is how we describe a function that accepts two parameters
 
 There is only a function that accepts a single parameter and then... returns another function! 
 
-And then that second function accepts yet another parameter and then returns a result!
+And then that second function accepts yet another parameter and *just then* returns a result!
 
-To state the same thing in terms of another language, here is how you would write a function that accepts two parameters in JavaScript:
+To state the same thing in terms of another language, here is how you would write a regular function that accepts two parameters in JavaScript:
 
 ```js
 function add(x, y) {
@@ -257,7 +265,9 @@ function add(x) {
 
 Note how we have two functions here, each accepting only a single parameter.
 
-So, at least in principle, we should be able to call `add` function with only one parameter and get a function. Is that really possible?
+In the code snippet above, function `add` accepts parameter `x` and the second, anonymous, function accepts the parameter `y`. There is no function here that accepts two parameters.
+
+So, based on what we have said so far, in Haskell we should be able to call `add` function with only one parameter and get a function, right?
 
 Let's try that in `ghci`:
 
@@ -277,7 +287,7 @@ Regrettably, we get an error message:
 
 But that doesn't happen, because we did something wrong. The problem arises, because `add 5` returns - as we stated - a function, and Haskell doesn't know how to print functions.
 
-We can however check the type of `add 5` expression and this way convience ourselves that this indeed works:
+We can however check the type of `add 5` expression and this way convince ourselves that this indeed works:
 
 ```
 :t add 5
@@ -323,7 +333,29 @@ First, we apply `add` to `5` and as a result, we get a function of type `Integer
 
 Then we apply that new function (`add 5`) on a value `7`. As a result, we get an `Integer` - number `12`.
 
-To further emphasize how all of this works, let's just add that you can store the result of such "partial application" in a variable.
+Note that this means that in Haskell function call is left-associative:
+
+```hs
+(add 5) 7
+```
+
+Contrasting with what we found out before - that type definition of function is right associative:
+
+```hs
+add :: Integer -> (Integer -> Integer)
+```
+
+It is of course done this way, so that we get a sane default. Thanks to those properties, in the case of both defining and calling the `add` function, we can simply forget about parentheses:
+
+```hs
+add :: Integer -> Integer -> Integer
+```
+
+```hs
+add 5 7
+```
+
+How else can we convince ourselves that the result of calling `add 5` is an actual, working function? Well... let's give a name to that function and use it that way!
 
 In your `lesson_02.hs` file add the following line:
 
@@ -333,7 +365,7 @@ addFive = add 5
 
 Load the file in `ghci`.
 
-First let's investigate the type one more, just to be sure what we are dealing with:
+First let's investigate the type one more time, just to be sure what we are dealing with:
 
 ```
 :t addFive
@@ -372,21 +404,25 @@ Now, I am sure this example with adding the number five seems a bit silly to you
 
 But I hope that it shows you the power of partial application in Haskell, where you can easily use highly general functions, accepting higher number of parameters, to create something more specific and fitting your particular needs.
 
-For example, you can imagine a function that needs some kind of complex configuration in order to work:
+For example, you can imagine a function that needs some kind of complex configuration in order to work - let's call it `imaginaryFunction`.
+
+Let's assume that this configuration is some kind of data structure of type `ComplexConfiguration`. We can make that configuration the first argument of our function:
 
 ```hs
 imaginaryFunction :: ComplexConfiguration -> OtherParameter -> Result
 ```
 
-You could easily have `ComplexConfiguration` as a parameter, for example for testing purposes.
+Why we want to pass it as parameter instead of just having it "hard coded" inside the function. Who knows, perhaps different versions of our app need different configurations. Or perhaps we just need to change its value in out unit test suite.
 
-And then, in the actual application, you could as easily apply that function to a specific configuration:
+If we do that, then, in the actual application, we can simply apply `imaginaryFunction` to a specific `ComplexConfiguration`:
 
 ```hs
 configuredImaginaryFunction = imaginaryFunction config
 ```
 
-After that you can use the `configuredImaginaryFunction` directly, without the need to carry that `config` object everywhere!
+After that, we can use the `configuredImaginaryFunction` directly, without the need to *explicitly* import `config` object, whenever we want to use `imaginaryFunction` in our code. Haskell just carries that config around for us! 
+
+Sweet!
 
 #### More Numbers and Operations
 
@@ -424,17 +460,43 @@ Other popular number types are `Float` and `Double`. Those are number types that
 
 `Float` and `Double` values can be added, subtracted, and multiplied just like `Int` and `Integer` values.
 
+Let's see some examples, just to make ourselves comfortable with that:
+
+```hs
+1.1 - 0.1
+```
+
+results in:
+
+```hs
+1.0
+```
+
+```hs
+1 + 0.1
+```
+
+result in:
+
+```hs
+1.1
+```
+
+Note that in Haskell's standard library there are  *much more* numeric types available. Some of them are fairly common, others are fairly specific. There are also much more built-in functions. 
+
+This section was just meant to make you comfortable with making simple operations on basic number types. In the future we will come back to numbers for sure - there is a great deal of interesting type-level stuff at play here, and we will want to cover that for sure!
+
 #### Identity
 
 Let's now take a small break from numbers and go back to our beloved booleans.
 
-Previously, we have written a `not` function, which was "reversing" the booleans - converting `True` to `False` and `False` to `True`.
+Previously, we have written a `not` function, which was negating the booleans - converting `True` to `False` and `False` to `True`.
 
 But what if we wanted to do... the opposite?
 
 What if we wanted to create a function that... returns `True` when passed `True` and returns `False` when passed `False`? 
 
-This might sound a bit nonsensical. In a way, this function would do literally nothing. However, we will see that it will have a tremendous educational value for us, so let's curb our doubts and try to write it anyway.
+This might sound a bit nonsensical. In a way, this function would do literally nothing. However, we will see that it will have a tremendous educational value for us, so let's curb our doubts and let's try to write it anyway.
 
 First, let's start with the name and type signature, like all Haskell programming should.
 
@@ -468,7 +530,7 @@ boolIdentity :: Bool -> Bool
 boolIdentity x = x
 ```
 
-Write it down in your `lesson_02.hs` file and reload the file in `ghci`.
+Write that down in your `lesson_02.hs` file and reload the file in `ghci`.
 
 You can convince yourself that our function works, by running it:
 
@@ -484,15 +546,17 @@ True
 
 And at the same time `boolIdentity False` returns `False` (hopefully not surprisingly).
 
-Now let's create a similar function, but for numbers - let's say `Integer`s. We want a function that will take an `Integer` value and return... exactly the same value. For example if we call it with `5`, we want to see `5` again.
+Now let's create a similar function, but for numbers - let's say for `Integer` type. We want a function that will take an `Integer` value and return... exactly the same value. For example if we call it with `5`, we want to see `5` again.
 
-To avoid collisions, let's call it `integerIdentity`. Let's begin by writing the type signature:
+Let's call it `integerIdentity`. Let's begin by writing the type signature:
 
 ```hs
 integerIdentity :: Integer -> Integer
 ```
 
-This was simple. Now let's think about the implementation. Well... we want to take the parameter passed to the function and... just return it!
+This was simple.
+
+Now let's think about the implementation. Well... we want to take the parameter passed to the function and... just return it!
 
 So we get:
 
@@ -516,22 +580,24 @@ integerIdentity x = x
 
 Everything looks the same. The only difference here are the types really. In the first function, we operate on the `Bool` type. In the second we operate on the `Integer` type.
 
-Now, if only there was a way to write that function only once. In this state of things, we would have to write an identity function for each type in existence, which... sounds daunting, to say the least.
+Now, if only there was a way to write that function only once. In the current state of things, we would have to write an identity function for each type in existence, which... sounds daunting, to say the least.
 
 It luckily turns out that Haskell does have a mechanism to deal with that easily. Not only that - we've already encountered that mechanism!
 
 Remember how the type of number `5` was `Num p => p`? The `p` in the type description was a type variable - basically a placeholder for actual, concrete types. 
 
+We've also seen that `+` operator was quite general - it could be called on *any* numberic type. It also had a type variable in its type signature.
+
 So the question is, can we use a type variable, to write the most generic version of the identity function possible? The answer is... absolutely!
 
-Let's remove the two identity functions and replace them with only one:
+Let's remove the two previous identity functions and replace them with only one:
 
 ```hs
 identity :: a -> a
 identity x = x
 ```
 
-Note how we used `a` as a type variable here. The 3 type definitions we've seen so far, share the same "shape". You can see that type definitions of identity for `Bool`s and for `Integer`s both "fit" this new type definition if you imagine `a` being a placeholder for other types:
+Note how we used `a` as a type variable here. The 3 type definitions we've seen so far, share the same "shape". You can see that type definitions of identity for `Bool` type and for `Integer` type both "fit" this new type definition, if you imagine variable `a` being a placeholder for other types:
 
 ```hs
 boolIdentity :: Bool -> Bool
@@ -543,7 +609,7 @@ integerIdentity :: Integer -> Integer
 identity :: a -> a
 ```
 
-Let's run this code in `ghci` and convince ourselves that we can indeed use this new, generic identity on both `Bool` and `Integer` values:
+Let's run the code in `ghci` and convince ourselves that we can indeed use this new, generic identity on both `Bool` and `Integer` values:
 
 ```hs
 identity True
@@ -567,7 +633,7 @@ works as well and results in:
 5
 ```
 
-Now at this point, it's important to emphasize a certain point. Given the implementation that we've used for the identity function:
+At this point, it's important to emphasize a certain point. Given the implementation that we've used for the identity function:
 
 ```hs
 identity x = x
@@ -579,7 +645,7 @@ we could **not** give it, for example, the following type:
 identity :: Integer -> Bool
 ```
 
-This type definition in itself is not absurd. You can easily imagine functions that accept integers and return true/false (for example based on some condition).
+This type definition in itself is not absurd. You can easily imagine functions that accept integers and return true or false (for example based on some condition).
 
 However, in this particular case, where we take argument `x` and immediately return it, without doing anything else, it's clearly impossible for `x` to "magically" change the type.
 
@@ -605,7 +671,7 @@ Couldn't match expected type ‘b’ with actual type ‘a’
 
 So the compiler literally says that in place of `b` there should be the type variable `a` present.
 
-That's because - given the current implementation - it's impossible for value stored in variable `x` to change type out of nowhere.
+That's because - given the current implementation - it's impossible for the value named `x` to just change the type out of nowhere.
 
 And indeed, when Haskell infers the type of untyped code, it goes for the most general interpretation possible.
 
@@ -627,9 +693,7 @@ As an answer you will see:
 identity :: p -> p
 ```
 
-This is exactly the same type definition that we wrote by hand. It simply uses a different letter (`p` instead of `a`). 
-
-But because the same letter is used twice in the type definition, it still expresses the idea of "a function that accepts a value of some type and returns the value of **that exact same type**".
+This is exactly the same type definition that we wrote by hand. It simply uses a different letter (`p` instead of `a`).
 
 At the very end of this section, it would be good to mention, that you don't actually have to define the `identity` function by yourself. We only did it for educational purposes.
 
