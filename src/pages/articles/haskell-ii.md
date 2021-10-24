@@ -1,6 +1,6 @@
 ---
 slug: "/articles/haskell-ii"
-date: "2021-08-10"
+date: "2021-10-24"
 title: "Haskell - The Most Gentle Introduction Ever (Part II)"
 ---
 
