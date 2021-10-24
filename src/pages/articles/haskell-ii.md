@@ -18,7 +18,7 @@ Before we begin this section, I must warn you. In the previous article, I purpos
 
 You might think that types representing numbers would be equally simple in Haskell. However, that's not *really* the case.
 
-Not only Haskell has quite a lot of types representing numbers, but there is also a significant effort in the language to make those types as interoperable with each other as possible. Because of that, there is a certain amount of complexity, which can be confusing to beginners.
+Not only does Haskell have quite a lot of types representing numbers, but there is also a significant effort in the language to make those types as interoperable with each other as possible. Because of that, there is a certain amount of complexity, which can be confusing to beginners.
 
 To see that, type in the following in the `ghci`:
 
@@ -215,7 +215,7 @@ To increase the readability even more, we can use the fact that `->` is right-as
 add :: Integer -> (Integer -> Integer)
 ```
 
-Let's focus on the part that is outside of parentheses first:
+Let's focus on the part that is outside of the parentheses first:
 
 ```hs
 add :: Integer -> (...)
@@ -287,7 +287,7 @@ Regrettably, we get an error message:
 
 But that doesn't happen, because we did something wrong. The problem arises, because `add 5` returns - as we stated - a function, and Haskell doesn't know how to print functions.
 
-We can however check the type of `add 5` expression and this way convince ourselves that this indeed works:
+We can however check the type of the `add 5` expression and this way convince ourselves that this indeed works:
 
 ```
 :t add 5
