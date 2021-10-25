@@ -5,6 +5,12 @@ import MainLinks from "../components/main-links";
 
 const articles = [
     {
+        title: '1 Month Vim Only Challenge - The Whats and The Whys',
+        links: {
+            here: '/articles/vim-challenge-kickoff',
+        }
+    },
+    {
         title: 'Haskell - The Most Gentle Introduction Ever (Part II)',
         links: {
             here: '/articles/haskell-ii',
