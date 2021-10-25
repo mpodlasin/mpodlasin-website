@@ -8,6 +8,7 @@ const articles = [
         title: '1 Month Vim Only Challenge - The Whats and The Whys',
         links: {
             here: '/articles/vim-challenge-kickoff',
+            devto: 'https://dev.to/mpodlasin/1-month-vim-only-challenge-the-whats-and-the-whys-5209',
         }
     },
     {
