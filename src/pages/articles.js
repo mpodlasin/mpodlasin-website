@@ -162,32 +162,36 @@ const articles = [
     }
 ]
 
-const tags = articles.reduce((currentTags, article) => {
-    article.tags.forEach(tag => {
-        currentTags[tag] = (currentTags[tag] || 0) + 1;
-    });
-
-    return currentTags;
-}, {});
-
 const ArticlesPage = () => {
     const [enabledTags, setEnabledTags] = React.useState({});
 
     const enabledTagsList = Object.entries(enabledTags).filter(([,enabled]) => enabled).map(([tagName]) => tagName);
-
+    
     const articlesToDisplay = articles.filter(article => enabledTagsList.every(enabledTag => article.tags.includes(enabledTag)));
+
+    const tags = articles.reduce((currentTags, article) => {
+        const articleIsDisplayed = articlesToDisplay.includes(article);
+
+        article.tags.forEach(tag => {
+            const tagCount = currentTags[tag] === undefined ? 0 : currentTags[tag];
+
+            currentTags[tag] = tagCount + (articleIsDisplayed ? 1 : 0);
+        });
+
+        return currentTags;
+    }, {});
 
     return (<>
         <Helmet title="Mateusz Podlasin - Front-End and Functional Programming Articles" />
         <Layout>
             <MainLinks />
-            <div style={{maxWidth: 600}} className="p-5">
+            <div style={{maxWidth: 572}} className="p-5">
                 <h2 className="text-2xl sm:text-3xl font-light mb-6 text-center">Articles</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 mb-6">{Object.entries(tags).map(([tagName, tagCount]) => {
+                <div className="grid grid-cols-1 sm:grid-cols-2 mb-6">{Object.entries(tags).sort(([tagNameA], [tagNameB]) => tagNameA.localeCompare(tagNameB)).map(([tagName, tagCount]) => {
                     return (
                         <div>
                             <input id={tagName} className="cursor-pointer" type="checkbox" onChange={e => setEnabledTags(tags => ({ ...tags, [tagName]: !tags[tagName]}))} />
-                            <label style={{transform: 'translateY(-2px)'}} htmlFor={tagName} className="p-2 pl-4 pr-0 cursor-pointer inline-block">{tagName} ({tagCount})</label>
+                            <label style={{transform: 'translateY(-2px)'}} htmlFor={tagName} className="p-2 pl-4 pr-0 sm:pr-12 cursor-pointer inline-block">{tagName} ({tagCount})</label>
                         </div>
                     );
                 })}</div>
