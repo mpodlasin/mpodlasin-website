@@ -5,6 +5,13 @@ import MainLinks from "../components/main-links";
 
 const articles = [
     {
+        title: '1 Month Vim Only Challenge - Week 1',
+        links: {
+            here: '/articles/vim-week-i',
+        },
+        tags: ['soft talks', 'vim'],
+    },
+    {
         title: '1 Month Vim Only Challenge - The Whats and The Whys',
         links: {
             here: '/articles/vim-challenge-kickoff',
