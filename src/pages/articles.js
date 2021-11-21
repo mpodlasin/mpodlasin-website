@@ -5,9 +5,17 @@ import MainLinks from "../components/main-links";
 
 const articles = [
     {
+        title: '1 Month Vim Only Challenge - Week 4 (Finale)',
+        links: {
+            here: '/articles/vim-week-iv',
+        },
+        tags: ['soft talks', 'vim'],
+    },
+    {
         title: '1 Month Vim Only Challenge - Weeks 2 and 3',
         links: {
             here: '/articles/vim-weeks-ii-and-iii',
+            devto: 'https://dev.to/mpodlasin/1-month-vim-only-challenge-weeks-2-and-3-3bcl',
         },
         tags: ['soft talks', 'vim'],
     },
