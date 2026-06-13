@@ -12,8 +12,6 @@ function setupScene(canvas: HTMLCanvasElement) {
         antialias: true,
     });
 
-    gui.hide();
-
     return { scene, camera, renderer, gui };
 }
 
@@ -27,9 +25,9 @@ async function loadAssets() {
             arm: await textureLoader.loadAsync('textures/hero/moon_03_1k/moon_03_arm_1k.png'),
         },
         text: {
-            color: await textureLoader.loadAsync('textures/hero/moon_03_1k/moon_03_diff_1k.png'),
-            normal: await textureLoader.loadAsync('textures/hero/moon_03_1k/moon_03_nor_gl_1k.png'),
-            arm: await textureLoader.loadAsync('textures/hero/moon_03_1k/moon_03_arm_1k.png'),
+            color: await textureLoader.loadAsync('textures/hero/rusty_metal_04_1k/rusty_metal_04_diff_1k.png'),
+            normal: await textureLoader.loadAsync('textures/hero/rusty_metal_04_1k/rusty_metal_04_nor_gl_1k.png'),
+            arm: await textureLoader.loadAsync('textures/hero/rusty_metal_04_1k/rusty_metal_04_arm_1k.png'),
         }
     }
 
@@ -42,7 +40,7 @@ async function loadAssets() {
 }
 
 export default async function heroThree(canvas: HTMLCanvasElement, setRequestAnimationFrameId: (id: number) => void) {
-    const { scene, camera, renderer } = setupScene(canvas);
+    const { scene, camera, renderer, gui } = setupScene(canvas);
 
     const { textures, fonts } = await loadAssets();
 
@@ -96,7 +94,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
 	        curveSegments: 12,
             bevelEnabled: true,
             bevelSegments: 24,
-            bevelSize: 0.05,
+            bevelSize: 0.03,
             bevelThickness: 0.05,
         }),
         new THREE.MeshStandardMaterial({
@@ -138,10 +136,18 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
     text.add(subtitle);
 
     /* LIGHTS */
+    const colors = {
+        ambientLightColor: '#f2f9ff',
+        directionalLightColor: '#e9f3ff',
+        spotLightColor: '#ffffff',
+    };
 
-    const directionalLight = new THREE.DirectionalLight('white', 8);
+    const ambientLight = new THREE.AmbientLight(colors.ambientLightColor, 0.1);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(colors.directionalLightColor, 7);
     scene.add(directionalLight);
-    directionalLight.position.z = 0.5;
+    directionalLight.position.z = 1.3;
     directionalLight.position.y = 0;
     directionalLight.position.x = 0;
 
@@ -153,10 +159,32 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
     directionalLightHelper.visible = false;
     scene.add(directionalLightHelper);
 
+
     camera.position.z = 5;
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
+
+    /* GUI */
+
+    const options = {
+        easing: 100,
+    }
+
+    gui.add(options, 'easing').min(1).max(100).step(0.1);
+
+    const ambientLightFolder = gui.addFolder('Ambient Light');
+    ambientLightFolder.add(ambientLight, 'intensity').min(0).max(1).step(0.0001);
+    ambientLightFolder.addColor(colors, 'ambientLightColor').name('color').onChange((color: unknown) => {
+        ambientLight.color = new THREE.Color(color as string);
+    })
+
+    const direcitonalLightFolder = gui.addFolder('Directional Light');
+    direcitonalLightFolder.add(directionalLight, 'intensity').min(0).max(10).step(0.001);
+    direcitonalLightFolder.add(directionalLight.position, 'z').min(0).max(5).step(0.001).name('position - z')
+    direcitonalLightFolder.addColor(colors, 'directionalLightColor').name('color').onChange((color: unknown) => {
+        directionalLight.color = new THREE.Color(color as string);
+    });
 
     const mousePosition = {
         x: 0,
@@ -169,11 +197,12 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
 
     function tick() {
         const normalizedPositionX = (mousePosition.x - 0.5) * 2;
-        const normalizedPositionY = (mousePosition.y - 0.5) * 2;
+        const normalizedPositionY = - (mousePosition.y - 0.5) * 2;
 
+        const directionalLightMultiplier = 7;
 
-        directionalLight.position.x = normalizedPositionX * 7;
-        directionalLight.position.y = - normalizedPositionY * 7;
+        directionalLight.position.x += (normalizedPositionX * directionalLightMultiplier - directionalLight.position.x) / options.easing;
+        directionalLight.position.y += (normalizedPositionY * directionalLightMultiplier - directionalLight.position.y) / options.easing;
 
         renderer.render(scene, camera);
         setRequestAnimationFrameId(requestAnimationFrame(tick));
