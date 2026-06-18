@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import GUI from 'lil-gui';
 
 function setupScene(canvas: HTMLCanvasElement) {
     const gui = new GUI();
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 1000);
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 1000);
     const renderer = new THREE.WebGLRenderer({
         canvas: canvas,
         antialias: true,
@@ -36,13 +37,18 @@ async function loadAssets() {
         hero: await fontLoader.loadAsync('fonts/helvetiker_regular.typeface.json'),
     };
 
-    return { textures, fonts }
+    const gltfLoader = new GLTFLoader();
+    const models = {
+        lamp: await gltfLoader.loadAsync('models/industrial_wall_lamp_1k.gltf/industrial_wall_lamp_1k.gltf')
+    }
+
+    return { textures, fonts, models }
 }
 
 export default async function heroThree(canvas: HTMLCanvasElement, setRequestAnimationFrameId: (id: number) => void) {
     const { scene, camera, renderer, gui } = setupScene(canvas);
 
-    const { textures, fonts } = await loadAssets();
+    const { textures, fonts, models } = await loadAssets();
 
     /* PLANE */
 
@@ -134,33 +140,81 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
     subtitle.receiveShadow = true;
     subtitle.position.y = -1.9;
     text.add(subtitle);
+    
+    /* LAMPS */
+
+    const lampA = models.lamp.scene;
+    lampA.scale.setScalar(6);
+    lampA.position.x = -4.5;
+    lampA.position.y = 0.2;
+    lampA.traverse(child => {
+        child.castShadow = true;
+    })
+    scene.add(lampA);
+
+    const lampB = lampA.clone();
+    lampB.scale.setScalar(6);
+    lampB.position.x = 4.5;
+    lampB.position.y = 0.2;
+    lampB.traverse(child => {
+        child.castShadow = true;
+        child.receiveShadow = true;
+    })
+    scene.add(lampB);
 
     /* LIGHTS */
     const colors = {
         ambientLightColor: '#f2f9ff',
-        directionalLightColor: '#e9f3ff',
-        spotLightColor: '#ffffff',
+        directionalLightColor: '#c8d9ff',
+        pointLightColor: '#ffffff',
+        spotlightColor: '#ffffff',
     };
 
-    const ambientLight = new THREE.AmbientLight(colors.ambientLightColor, 0.1);
+    const ambientLight = new THREE.AmbientLight(colors.ambientLightColor, 0);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(colors.directionalLightColor, 7);
+    const directionalLight = new THREE.DirectionalLight(colors.directionalLightColor, 0.5);
     scene.add(directionalLight);
-    directionalLight.position.z = 1.3;
+    directionalLight.position.z = 4;
     directionalLight.position.y = 0;
     directionalLight.position.x = 0;
 
     directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 1024 * 2;
-    directionalLight.shadow.mapSize.height = 1024 * 2;
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
 
     const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
     directionalLightHelper.visible = false;
     scene.add(directionalLightHelper);
 
+    const pointLightA = new THREE.PointLight(colors.pointLightColor, 6);
+    scene.add(pointLightA);
+    pointLightA.castShadow = false;
 
-    camera.position.z = 5;
+    pointLightA.position.x = lampA.position.x;
+    pointLightA.position.z = 0.5;
+
+    const pointLightB = new THREE.PointLight(colors.pointLightColor, 6);
+    scene.add(pointLightB);
+    pointLightB.castShadow = false;
+
+    pointLightB.position.x = lampB.position.x;
+    pointLightB.position.z = 0.5;
+
+    const spotLight = new THREE.SpotLight(colors.spotlightColor, 15);
+    spotLight.position.set(0, 0, 1.2);
+    spotLight.castShadow = true;
+    spotLight.shadow.mapSize.width = 1024 * 2;
+    spotLight.shadow.mapSize.height = 1024 * 2;
+    spotLight.penumbra = 0.1
+    spotLight.angle = 1.2;
+    scene.add(spotLight);
+    scene.add(spotLight.target);
+
+
+    /* MISC */
+
+    camera.position.z = 8;
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
@@ -168,7 +222,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
     /* GUI */
 
     const options = {
-        easing: 100,
+        easing: 10,
     }
 
     gui.add(options, 'easing').min(1).max(100).step(0.1);
@@ -185,6 +239,30 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
     direcitonalLightFolder.addColor(colors, 'directionalLightColor').name('color').onChange((color: unknown) => {
         directionalLight.color = new THREE.Color(color as string);
     });
+
+    const pointLightFolderA = gui.addFolder('Point Light A');
+    pointLightFolderA.add(pointLightA, 'intensity').min(0).max(10).step(0.001);
+    pointLightFolderA.add(pointLightA.position, 'z').min(0).max(10).step(0.001);
+    pointLightFolderA.add(pointLightA, 'castShadow');
+
+    const pointLightFolderB = gui.addFolder('Point Light B');
+    pointLightFolderB.add(pointLightB, 'intensity').min(0).max(10).step(0.001);
+    pointLightFolderB.add(pointLightB.position, 'z').min(0).max(10).step(0.001);
+    pointLightFolderA.add(pointLightA, 'castShadow');
+
+    const spotLightFolder = gui.addFolder('Spot Light');
+    spotLightFolder.add(spotLight, 'intensity').min(0).max(100).step(0.001);
+    spotLightFolder.add(spotLight.position, 'x').min(-10).max(10).step(0.001);
+    spotLightFolder.add(spotLight.position, 'y').min(-10).max(10).step(0.001);
+    spotLightFolder.add(spotLight.position, 'z').min(0).max(10).step(0.001);
+    spotLightFolder.add(spotLight, 'penumbra').min(0).max(1).step(0.001);
+    spotLightFolder.add(spotLight, 'angle').min(0).max(Math.PI / 2).step(0.001);
+
+    spotLightFolder.add(spotLight.target.position, 'x').min(-10).max(10).step(0.001).name('target - x');
+    spotLightFolder.add(spotLight.target.position, 'y').min(-10).max(10).step(0.001).name('target - y');
+    spotLightFolder.add(spotLight.target.position, 'z').min(0).max(10).step(0.001).name('target - z');
+
+    /* MOUSE */
 
     const mousePosition = {
         x: 0,
@@ -203,6 +281,12 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
 
         directionalLight.position.x += (normalizedPositionX * directionalLightMultiplier - directionalLight.position.x) / options.easing;
         directionalLight.position.y += (normalizedPositionY * directionalLightMultiplier - directionalLight.position.y) / options.easing;
+
+        spotLight.position.x += (normalizedPositionX * 7 - spotLight.position.x) / options.easing
+        spotLight.target.position.x += (normalizedPositionX * 6.8 - spotLight.target.position.x) / options.easing
+
+        spotLight.position.y += (normalizedPositionY * 5 - spotLight.position.y) / options.easing
+        spotLight.target.position.y += (normalizedPositionY * 4.8 - spotLight.target.position.y) / options.easing
 
         renderer.render(scene, camera);
         setRequestAnimationFrameId(requestAnimationFrame(tick));
