@@ -173,7 +173,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
     const ambientLight = new THREE.AmbientLight(colors.ambientLightColor, 0);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(colors.directionalLightColor, 0.5);
+    const directionalLight = new THREE.DirectionalLight(colors.directionalLightColor, 0.8);
     scene.add(directionalLight);
     directionalLight.position.z = 4;
     directionalLight.position.y = 0;
@@ -201,7 +201,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
     pointLightB.position.x = lampB.position.x;
     pointLightB.position.z = 0.5;
 
-    const spotLight = new THREE.SpotLight(colors.spotlightColor, 15);
+    const spotLight = new THREE.SpotLight(colors.spotlightColor, 25);
     spotLight.position.set(0, 0, 1.2);
     spotLight.castShadow = true;
     spotLight.shadow.mapSize.width = 1024 * 2;
