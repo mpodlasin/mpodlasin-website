@@ -13,6 +13,8 @@ function setupScene(canvas: HTMLCanvasElement) {
         antialias: true,
     });
 
+    gui.hide();
+
     return { scene, camera, renderer, gui };
 }
 
@@ -173,7 +175,13 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
     const ambientLight = new THREE.AmbientLight(colors.ambientLightColor, 0);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(colors.directionalLightColor, 0.8);
+    const intensity = {
+        directionalLight: 0.2,
+        stopLight: 25,
+        pointLight: 6,
+    }
+
+    const directionalLight = new THREE.DirectionalLight(colors.directionalLightColor, intensity.directionalLight);
     scene.add(directionalLight);
     directionalLight.position.z = 4;
     directionalLight.position.y = 0;
@@ -187,21 +195,21 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
     directionalLightHelper.visible = false;
     scene.add(directionalLightHelper);
 
-    const pointLightA = new THREE.PointLight(colors.pointLightColor, 6);
+    const pointLightA = new THREE.PointLight(colors.pointLightColor, intensity.pointLight);
     scene.add(pointLightA);
     pointLightA.castShadow = false;
 
     pointLightA.position.x = lampA.position.x;
     pointLightA.position.z = 0.5;
 
-    const pointLightB = new THREE.PointLight(colors.pointLightColor, 6);
+    const pointLightB = new THREE.PointLight(colors.pointLightColor, intensity.pointLight);
     scene.add(pointLightB);
     pointLightB.castShadow = false;
 
     pointLightB.position.x = lampB.position.x;
     pointLightB.position.z = 0.5;
 
-    const spotLight = new THREE.SpotLight(colors.spotlightColor, 25);
+    const spotLight = new THREE.SpotLight(colors.spotlightColor, intensity.stopLight);
     spotLight.position.set(0, 0, 1.2);
     spotLight.castShadow = true;
     spotLight.shadow.mapSize.width = 1024 * 2;
@@ -273,7 +281,40 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
         mousePosition.y = e.clientY / window.innerHeight;
     });
 
+    let flashLightOn = false;
+    let flashLightMoment = 0;
+    window.addEventListener('click', () => {
+        flashLightOn = !flashLightOn;
+        timer.update();
+        flashLightMoment = timer.getElapsed();
+    });
+
+    const animations = {
+        flashlightFadeInLength: 0.1,
+        flashLightFadeOutLength: 0.01,
+
+        flickerAnimationLength: 1,
+        flickerARepeat: 10,
+        flickerBRepeat: 14,
+    }
+
+    const timer = new THREE.Timer();
+
     function tick() {
+        timer.update();
+        const elapsedTime = timer.getElapsed();
+
+        const initialIntensityAnimation = Math.min(elapsedTime, 1) / 1;
+
+        const flickerAGate = (animations.flickerBRepeat - animations.flickerAnimationLength) < elapsedTime % animations.flickerBRepeat ? 1 : 0;
+        const flickerBGate = (animations.flickerARepeat - animations.flickerAnimationLength) < elapsedTime % animations.flickerARepeat ? 1 : 0;
+
+        const frequencyA = (Math.sin(elapsedTime * 35) + Math.sin(elapsedTime * 40)) / 2 * flickerAGate;
+        pointLightA.intensity = (frequencyA + 1) / 2.0 * intensity.pointLight * initialIntensityAnimation;
+
+        const frequencyB = (Math.sin(elapsedTime * 35) + Math.sin(elapsedTime * 30)) / 2 * flickerBGate;
+        pointLightB.intensity = (frequencyB + 1) / 2.0 * intensity.pointLight * initialIntensityAnimation;
+
         const normalizedPositionX = (mousePosition.x - 0.5) * 2;
         const normalizedPositionY = - (mousePosition.y - 0.5) * 2;
 
@@ -287,6 +328,24 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
 
         spotLight.position.y += (normalizedPositionY * 5 - spotLight.position.y) / options.easing
         spotLight.target.position.y += (normalizedPositionY * 4.8 - spotLight.target.position.y) / options.easing
+
+        if (flashLightOn) {
+            if (elapsedTime - flashLightMoment < animations.flashlightFadeInLength) {
+                directionalLight.intensity = (elapsedTime - flashLightMoment) * (1 / animations.flashlightFadeInLength) * intensity.directionalLight;
+                spotLight.intensity = (elapsedTime - flashLightMoment) * (1 / animations.flashlightFadeInLength) * intensity.stopLight;
+            } else {
+                directionalLight.intensity = intensity.directionalLight;
+                spotLight.intensity = intensity.stopLight;
+            }
+        } else {
+            if (elapsedTime - flashLightMoment < animations.flashLightFadeOutLength) {
+                directionalLight.intensity = (1 - ((elapsedTime - flashLightMoment) * (1 / animations.flashLightFadeOutLength))) * intensity.directionalLight;
+                spotLight.intensity = (1 - ((elapsedTime - flashLightMoment) * (1 / animations.flashLightFadeOutLength))) * intensity.stopLight;
+            } else {
+                directionalLight.intensity = 0;
+                spotLight.intensity = 0;
+            }
+        }
 
         renderer.render(scene, camera);
         setRequestAnimationFrameId(requestAnimationFrame(tick));
