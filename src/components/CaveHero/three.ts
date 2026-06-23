@@ -47,7 +47,7 @@ async function loadAssets() {
     return { textures, fonts, models }
 }
 
-export default async function heroThree(canvas: HTMLCanvasElement, setRequestAnimationFrameId: (id: number) => void) {
+export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (fn: () => void) => void) {
     const { scene, camera, renderer, gui } = setupScene(canvas);
 
     const { textures, fonts, models } = await loadAssets();
@@ -276,18 +276,26 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
         x: 0,
         y: 0,
     }
-    window.addEventListener('mousemove', e => {
+    const handleMouseMove = e => {
         mousePosition.x = e.clientX / window.innerWidth;
         mousePosition.y = e.clientY / window.innerHeight;
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    onUnmount(() => {
+        window.removeEventListener('mousemove', handleMouseMove);
     });
 
     let flashLightOn = false;
     let flashLightMoment = 0;
-    window.addEventListener('click', () => {
+    const handleClick = () => {
         flashLightOn = !flashLightOn;
         timer.update();
         flashLightMoment = timer.getElapsed();
-    });
+    };
+    window.addEventListener('click', handleClick);
+    onUnmount(() => {
+        window.removeEventListener('click', handleClick);
+    })
 
     const animations = {
         flashlightFadeInLength: 0.1,
@@ -299,6 +307,8 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
     }
 
     const timer = new THREE.Timer();
+
+    let requestAnimationFrameId: number | null = null;
 
     function tick() {
         timer.update();
@@ -348,8 +358,14 @@ export default async function heroThree(canvas: HTMLCanvasElement, setRequestAni
         }
 
         renderer.render(scene, camera);
-        setRequestAnimationFrameId(requestAnimationFrame(tick));
+        requestAnimationFrameId = requestAnimationFrame(tick);
     }
+
+    onUnmount(() => {
+        if (requestAnimationFrameId !== null) {
+            cancelAnimationFrame(requestAnimationFrameId);
+        }
+    })
 
     tick();
 }

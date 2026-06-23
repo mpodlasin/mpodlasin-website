@@ -1,25 +1,10 @@
 'use client'
 
-import { useEffect, useRef } from 'react';
 import heroThree from './three';
+import ThreeJSCanvas from '../ThreeJSCanvas';
 
 const CaveHero = () => {
-    const canvas = useRef(null);
-    const requestAnimationFrameRef = useRef<number | null>(null);
-
-    useEffect(() => {
-        if (!canvas.current) return;
-
-        heroThree(canvas.current, id => requestAnimationFrameRef.current = id);
-
-        return () => {
-            if (requestAnimationFrameRef.current) {
-                cancelAnimationFrame(requestAnimationFrameRef.current);
-            }
-        }
-    }, []);
-
-    return <canvas ref={canvas} />;
+    return <ThreeJSCanvas threeJSFunction={heroThree} />
 }
 
 export default CaveHero;
