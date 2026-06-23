@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import heroThree from './three';
 
-const Hero = () => {
+const CaveHero = () => {
     const canvas = useRef(null);
     const requestAnimationFrameRef = useRef<number | null>(null);
 
@@ -22,4 +22,4 @@ const Hero = () => {
     return <canvas ref={canvas} />;
 }
 
-export default Hero;
+export default CaveHero;

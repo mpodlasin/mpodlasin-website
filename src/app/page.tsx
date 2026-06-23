@@ -1,9 +1,9 @@
-import Hero from "@/components/Hero";
+import CaveHero from "@/components/CaveHero";
 
 export default function Home() {
   return (
     <>
-      <Hero />
+      <CaveHero />
     </>
   );
 }
