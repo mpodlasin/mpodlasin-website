@@ -276,7 +276,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
         x: 0,
         y: 0,
     }
-    const handleMouseMove = e => {
+    const handleMouseMove = (e: MouseEvent) => {
         mousePosition.x = e.clientX / window.innerWidth;
         mousePosition.y = e.clientY / window.innerHeight;
     };

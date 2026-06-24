@@ -1,9 +1,9 @@
-import CaveHero from "@/components/CaveHero";
+import OrthogonalHero from "@/components/OrthogonalHero";
 
 export default function Home() {
   return (
     <>
-      <CaveHero />
+      <OrthogonalHero />
     </>
   );
 }
