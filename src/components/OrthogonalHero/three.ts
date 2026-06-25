@@ -1,11 +1,10 @@
 import * as THREE from 'three';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-// import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import GUI from 'lil-gui';
-import { Collider, ColliderDesc, RigidBody } from '@dimforge/rapier3d';
+import { Collider, RigidBody } from '@dimforge/rapier3d';
 
 async function setupScene(canvas: HTMLCanvasElement) {
     const gui = new GUI();
@@ -36,30 +35,51 @@ async function setupScene(canvas: HTMLCanvasElement) {
 }
 
 async function loadAssets() {
-    // const textureLoader = new THREE.TextureLoader();
-    const textures = {}
+    const textureLoader = new THREE.TextureLoader();
+
+    const textures = {
+        velvet: {
+            normal: await textureLoader.loadAsync('/textures/orthogonal_hero/velour_velvet_1k/velour_velvet_nor_gl_1k.png'),
+            color: await textureLoader.loadAsync('/textures/orthogonal_hero/velour_velvet_1k/velour_velvet_diff_1k.png'),
+            arm: await textureLoader.loadAsync('/textures/orthogonal_hero/velour_velvet_1k/velour_velvet_arm_1k.png'), 
+        }
+    }
 
     const fontLoader = new FontLoader();
     const fonts = {
         hero: await fontLoader.loadAsync('fonts/helvetiker_regular.typeface.json'),
     };
 
-    // const gltfLoader = new GLTFLoader();
-    const models = {}
-
-    return { textures, fonts, models }
+    return { textures, fonts }
 }
 
 export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (fn: () => void) => void) {
     const { scene, camera, renderer, gui, controls, RAPIER } = await setupScene(canvas);
 
-    const { textures, fonts, models } = await loadAssets();
+    const { textures, fonts } = await loadAssets();
+
+    textures.velvet.color.colorSpace = THREE.SRGBColorSpace;
+    const velvetRepeats = 0.5;
+    textures.velvet.color.repeat.setScalar(velvetRepeats);
+    textures.velvet.color.wrapS = THREE.RepeatWrapping;
+    textures.velvet.color.wrapT = THREE.RepeatWrapping;
+
+    textures.velvet.normal.repeat.setScalar(velvetRepeats);
+    textures.velvet.normal.wrapS = THREE.RepeatWrapping;
+    textures.velvet.normal.wrapT = THREE.RepeatWrapping;
+
+    textures.velvet.arm.repeat.setScalar(velvetRepeats);
+    textures.velvet.arm.wrapS = THREE.RepeatWrapping;
+    textures.velvet.arm.wrapT = THREE.RepeatWrapping;
 
     const plane = new THREE.Mesh(
         new THREE.PlaneGeometry(20, 20),
-        new THREE.MeshStandardMaterial({ color: 'yellow' })
+        new THREE.MeshStandardMaterial({
+            color: 'yellow',
+        })
     )
     plane.rotation.x = - Math.PI / 2;
+    plane.position.y = 0.1;
     scene.add(plane);
     plane.receiveShadow = true;
 
@@ -78,7 +98,14 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
 
     const text = new THREE.Mesh(
         textGeometryMerged,
-        new THREE.MeshStandardMaterial({ color: 'teal' })
+        new THREE.MeshStandardMaterial({ 
+            color: 'teal',
+            // map: textures.velvet.color,
+            normalMap: textures.velvet.normal,
+            aoMap: textures.velvet.arm,
+            metalnessMap: textures.velvet.arm,
+            roughnessMap: textures.velvet.arm,
+        })
     )
     text.geometry.center();
     // text.quaternion.x = Math.sin(- Math.PI / 8);
@@ -86,6 +113,8 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
     scene.add(text);
     text.castShadow = true;
     text.receiveShadow = true;
+
+    const cubeMaterial = new THREE.MeshStandardMaterial({ color: 'deeppink' });
 
     const directionalLight = new THREE.DirectionalLight('white', 8)
     directionalLight.position.z = 5;
@@ -95,6 +124,10 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
+
+    gui.add(directionalLight.position, 'x').min(-5).max(5).step(0.0001).name('directional - x');
+    gui.add(directionalLight.position, 'y').min(-5).max(5).step(0.0001).name('directional - y');
+    gui.add(directionalLight.position, 'z').min(-5).max(5).step(0.0001).name('directional - z');
 
     
     camera.position.z = 10;
@@ -111,7 +144,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
 
             const cube = new THREE.Mesh(
                 new THREE.BoxGeometry(size, size, size),
-                new THREE.MeshStandardMaterial({ color: 'deeppink' }),
+                cubeMaterial,
             )
             cube.castShadow = true;
             scene.add(cube);
@@ -120,6 +153,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
             const rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic()
                 .setTranslation((Math.random() * 2 - 1) * 3, 5, 0);
             const rigidBody = world.createRigidBody(rigidBodyDesc);
+            rigidBody.enableCcd(true);
 
             const colliderDesc = RAPIER.ColliderDesc.cuboid(size / 2, size / 2, size / 2);
             const collider = world.createCollider(colliderDesc, rigidBody);
