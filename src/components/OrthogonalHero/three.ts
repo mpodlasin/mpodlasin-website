@@ -3,9 +3,11 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 // import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import GUI from 'lil-gui';
+import { Collider, ColliderDesc, RigidBody } from '@dimforge/rapier3d';
 
-function setupScene(canvas: HTMLCanvasElement) {
+async function setupScene(canvas: HTMLCanvasElement) {
     const gui = new GUI();
     const scene = new THREE.Scene();
     // const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 1000);
@@ -19,7 +21,6 @@ function setupScene(canvas: HTMLCanvasElement) {
         1, 
         1000 
     );
-    console.log(window.innerWidth / varrr);
 
     const controls = new OrbitControls(camera, canvas);
     const renderer = new THREE.WebGLRenderer({
@@ -27,9 +28,11 @@ function setupScene(canvas: HTMLCanvasElement) {
         antialias: true,
     });
 
-    gui.hide();
+    // gui.hide();
 
-    return { scene, camera, renderer, gui, controls };
+    const RAPIER = await import('@dimforge/rapier3d');
+
+    return { scene, camera, renderer, gui, controls, RAPIER };
 }
 
 async function loadAssets() {
@@ -48,32 +51,38 @@ async function loadAssets() {
 }
 
 export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (fn: () => void) => void) {
-    const { scene, camera, renderer, gui, controls } = setupScene(canvas);
+    const { scene, camera, renderer, gui, controls, RAPIER } = await setupScene(canvas);
 
     const { textures, fonts, models } = await loadAssets();
 
     const plane = new THREE.Mesh(
-        new THREE.PlaneGeometry(10, 10),
+        new THREE.PlaneGeometry(20, 20),
         new THREE.MeshStandardMaterial({ color: 'yellow' })
     )
+    plane.rotation.x = - Math.PI / 2;
     scene.add(plane);
     plane.receiveShadow = true;
 
-    const text = new THREE.Mesh(
-        new TextGeometry("Mateusz\nPodlasin", {
+    const textGeometry = new TextGeometry("Mateusz\nPodlasin", {
             font: fonts.hero,
             size: 1,
 	        depth: 0.2,
-	        curveSegments: 12,
+	        curveSegments: 12, 
             bevelEnabled: true,
             bevelSegments: 24,
             bevelSize: 0.03,
             bevelThickness: 0.05,
-        }),
+        });
+
+    const textGeometryMerged = BufferGeometryUtils.mergeVertices(textGeometry, 0.0001);
+
+    const text = new THREE.Mesh(
+        textGeometryMerged,
         new THREE.MeshStandardMaterial({ color: 'teal' })
     )
     text.geometry.center();
-    text.rotation.z = Math.PI * 0.25;
+    // text.quaternion.x = Math.sin(- Math.PI / 8);
+    // text.quaternion.w = Math.cos(- Math.PI / 8);
     scene.add(text);
     text.castShadow = true;
     text.receiveShadow = true;
@@ -92,13 +101,96 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
 
+    const shapes: THREE.Mesh[] = [];
+    const bodies: RigidBody[] = [];
+    const colliders: Collider[] = [];
+
+    const animations = {
+        createCube() {
+            const size = 0.1;
+
+            const cube = new THREE.Mesh(
+                new THREE.BoxGeometry(size, size, size),
+                new THREE.MeshStandardMaterial({ color: 'deeppink' }),
+            )
+            cube.castShadow = true;
+            scene.add(cube);
+            shapes.push(cube);
+
+            const rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic()
+                .setTranslation((Math.random() * 2 - 1) * 3, 5, 0);
+            const rigidBody = world.createRigidBody(rigidBodyDesc);
+
+            const colliderDesc = RAPIER.ColliderDesc.cuboid(size / 2, size / 2, size / 2);
+            const collider = world.createCollider(colliderDesc, rigidBody);
+            colliders.push(collider);
+
+            bodies.push(rigidBody);
+
+            if (bodies.length > 100) {
+                const body = bodies.shift()
+                const shape = shapes.shift()
+                const collider = colliders.shift();
+
+                if (collider) {
+                    world.removeCollider(collider, false);
+                }
+
+                if (body) {
+                    world.removeRigidBody(body);
+                }
+
+                if (shape) {
+                    scene.remove(shape);
+                }
+            }
+        }
+    }
+
+    gui.add(animations, 'createCube');
+
+    setInterval(animations.createCube, 500);
+
+    const gravity = { x: 0.0, y: -9.81, z: 0.0 };
+    const world = new RAPIER.World(gravity);
+
+    const groundColliderDesc = RAPIER.ColliderDesc.cuboid(10.0, 0.1, 10.0);
+    world.createCollider(groundColliderDesc);
+
+
+    const positions = text.geometry.attributes.position.array;
+    const indices = text.geometry.index?.array ?? [];
+
+    const colliderDesc = RAPIER.ColliderDesc.trimesh(
+        new Float32Array(positions),
+        new Uint32Array(indices),
+        RAPIER.TriMeshFlags.FIX_INTERNAL_EDGES,
+    );
+    colliderDesc.setRotation(text.quaternion);
+    world.createCollider(colliderDesc);
+
     const timer = new THREE.Timer();
 
     let requestAnimationFrameId: number | null = null;
-
     function tick() {
         timer.update();
         const elapsedTime = timer.getElapsed();
+
+        world.step();
+
+        bodies.forEach((body, index) => {
+            const position = body.translation();
+            shapes[index].position.set(position.x, position.y, position.z);
+
+            const rotation = body.rotation();
+
+            shapes[index].quaternion.set(
+                rotation.x,
+                rotation.y,
+                rotation.z,
+                rotation.w
+            )
+        })
 
         controls.update();
         renderer.render(scene, camera);
