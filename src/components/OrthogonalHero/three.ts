@@ -60,16 +60,12 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
     const { textures, fonts } = await loadAssets();
 
     const textureColors = {
-        plane: 'yellow',
         text: 'teal',
         cubes: 'deeppink',
     }
 
-    gui.addColor(textureColors, 'plane').onChange((color: string) => {
-        plane.material.color = new THREE.Color(color);
-    });
     gui.addColor(textureColors, 'text').onChange((color: string) => {
-        text.material.color = new THREE.Color(color);
+        name.material.color = new THREE.Color(color);
     });
     gui.addColor(textureColors, 'cubes').onChange((color: string) => {
         cubeMaterial.color = new THREE.Color(color);
@@ -89,18 +85,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
     textures.velvet.arm.wrapS = THREE.RepeatWrapping;
     textures.velvet.arm.wrapT = THREE.RepeatWrapping;
 
-    const plane = new THREE.Mesh(
-        new THREE.PlaneGeometry(20, 20),
-        new THREE.MeshStandardMaterial({
-            color: 'yellow',
-        })
-    )
-    plane.rotation.x = - Math.PI / 2;
-    plane.position.y = 0.1;
-    scene.add(plane);
-    plane.receiveShadow = true;
-
-    const textGeometry = new TextGeometry("Mateusz\nPodlasin", {
+    const nameGeometry = new TextGeometry("Mateusz", {
             font: fonts.hero,
             size: 1,
 	        depth: 0.2,
@@ -111,27 +96,53 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
             bevelThickness: 0.05,
         });
 
-    const textGeometryMerged = BufferGeometryUtils.mergeVertices(textGeometry, 0.0001);
+    const surnameGeometry = new TextGeometry("Podlasin", {
+            font: fonts.hero,
+            size: 1,
+	        depth: 0.2,
+	        curveSegments: 12, 
+            bevelEnabled: true,
+            bevelSegments: 24,
+            bevelSize: 0.03,
+            bevelThickness: 0.05,
+        });
 
-    const text = new THREE.Mesh(
-        textGeometryMerged,
-        new THREE.MeshStandardMaterial({ 
+    const nameGeometryMerged = BufferGeometryUtils.mergeVertices(nameGeometry, 0.0001);
+    const surnameGeometryMerged = BufferGeometryUtils.mergeVertices(surnameGeometry, 0.0001);
+
+    const textMaterial = new THREE.MeshStandardMaterial({ 
             color: 'teal',
-            // map: textures.velvet.color,
             normalMap: textures.velvet.normal,
             aoMap: textures.velvet.arm,
             metalnessMap: textures.velvet.arm,
             roughnessMap: textures.velvet.arm,
-        })
-    )
-    text.geometry.center();
-    // text.quaternion.x = Math.sin(- Math.PI / 8);
-    // text.quaternion.w = Math.cos(- Math.PI / 8);
-    scene.add(text);
-    text.castShadow = true;
-    text.receiveShadow = true;
+        });
 
-    const cubeMaterial = new THREE.MeshStandardMaterial({ color: 'deeppink' });
+    const text = new THREE.Group();
+    scene.add(text);
+
+    const name = new THREE.Mesh(
+        nameGeometryMerged,
+        textMaterial,
+    )
+    name.position.y = 0.7;
+    name.geometry.center();
+    text.add(name);
+    name.castShadow = true;
+    name.receiveShadow = true;
+
+    const surname = new THREE.Mesh(
+        surnameGeometryMerged,
+        textMaterial,
+    )
+    surname.geometry.center();
+    text.add(surname);
+    surname.position.y = - 0.7;
+    surname.position.z = 0.5;
+    surname.castShadow = true;
+    surname.receiveShadow = true;
+
+    const cubeMaterial = new THREE.MeshStandardMaterial({ color: 'orange' });
 
     const directionalLight = new THREE.DirectionalLight('white', 8)
     directionalLight.position.z = 5;
@@ -169,7 +180,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
             shapes.push(cube);
 
             const rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic()
-                .setTranslation((Math.random() * 2 - 1) * 3, 5, 0);
+                .setTranslation((Math.random() * 2 - 1) * 2.5, 5, Math.random() > 0.5 ? 0 : surname.position.z);
             const rigidBody = world.createRigidBody(rigidBodyDesc);
             rigidBody.enableCcd(true);
 
@@ -204,20 +215,23 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
     const gravity = { x: 0.0, y: -9.81, z: 0.0 };
     const world = new RAPIER.World(gravity);
 
-    const groundColliderDesc = RAPIER.ColliderDesc.cuboid(10.0, 0.1, 10.0);
-    world.createCollider(groundColliderDesc);
-
-
-    const positions = text.geometry.attributes.position.array;
-    const indices = text.geometry.index?.array ?? [];
-
-    const colliderDesc = RAPIER.ColliderDesc.trimesh(
-        new Float32Array(positions),
-        new Uint32Array(indices),
+    const nameColliderDesc = RAPIER.ColliderDesc.trimesh(
+        new Float32Array(name.geometry.attributes.position.array),
+        new Uint32Array(name.geometry.index?.array ?? []),
         RAPIER.TriMeshFlags.FIX_INTERNAL_EDGES,
     );
-    colliderDesc.setRotation(text.quaternion);
-    world.createCollider(colliderDesc);
+    nameColliderDesc
+        .setTranslation(name.position.x, name.position.y, name.position.z);
+    world.createCollider(nameColliderDesc);
+
+    const surnameColliderDesc = RAPIER.ColliderDesc.trimesh(
+        new Float32Array(surname.geometry.attributes.position.array),
+        new Uint32Array(surname.geometry.index?.array ?? []),
+        RAPIER.TriMeshFlags.FIX_INTERNAL_EDGES,
+    );
+    surnameColliderDesc
+        .setTranslation(surname.position.x, surname.position.y, surname.position.z);
+    world.createCollider(surnameColliderDesc);
 
     const timer = new THREE.Timer();
 
