@@ -26,7 +26,7 @@ const ThreeJSCanvas = ({ threeJSFunction }: CaveHeroProps) => {
         }
     }, [threeJSFunction]);
 
-    return <canvas ref={canvas} />;
+    return <canvas style={{position: 'relative'}} ref={canvas} />;
 }
 
 export default ThreeJSCanvas;

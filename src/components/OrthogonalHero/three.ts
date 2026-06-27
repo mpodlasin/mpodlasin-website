@@ -22,12 +22,13 @@ async function setupScene(canvas: HTMLCanvasElement) {
     );
 
     const controls = new OrbitControls(camera, canvas);
+    controls.enabled = false;
     const renderer = new THREE.WebGLRenderer({
         canvas: canvas,
         antialias: true,
     });
 
-    // gui.hide();
+    gui.hide();
 
     const RAPIER = await import('@dimforge/rapier3d');
 
@@ -57,6 +58,22 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
     const { scene, camera, renderer, gui, controls, RAPIER } = await setupScene(canvas);
 
     const { textures, fonts } = await loadAssets();
+
+    const textureColors = {
+        plane: 'yellow',
+        text: 'teal',
+        cubes: 'deeppink',
+    }
+
+    gui.addColor(textureColors, 'plane').onChange((color: string) => {
+        plane.material.color = new THREE.Color(color);
+    });
+    gui.addColor(textureColors, 'text').onChange((color: string) => {
+        text.material.color = new THREE.Color(color);
+    });
+    gui.addColor(textureColors, 'cubes').onChange((color: string) => {
+        cubeMaterial.color = new THREE.Color(color);
+    });
 
     textures.velvet.color.colorSpace = THREE.SRGBColorSpace;
     const velvetRepeats = 0.5;
@@ -129,6 +146,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
     gui.add(directionalLight.position, 'y').min(-5).max(5).step(0.0001).name('directional - y');
     gui.add(directionalLight.position, 'z').min(-5).max(5).step(0.0001).name('directional - z');
 
+    gui.add(controls, 'enabled').name('controls enabled')
     
     camera.position.z = 10;
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -181,8 +199,6 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
         }
     }
 
-    gui.add(animations, 'createCube');
-
     setInterval(animations.createCube, 500);
 
     const gravity = { x: 0.0, y: -9.81, z: 0.0 };
@@ -205,10 +221,27 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
 
     const timer = new THREE.Timer();
 
+    let scrollPosition = 0;
+
+    window.addEventListener('scroll', () => {
+        scrollPosition = window.scrollY / window.innerHeight;
+
+        console.log(window.scrollY / window.innerHeight);
+
+        if(scrollPosition < 2) {
+            canvas.style.setProperty('top', `${window.scrollY}px`);
+        }
+    })
+
     let requestAnimationFrameId: number | null = null;
     function tick() {
         timer.update();
-        const elapsedTime = timer.getElapsed();
+        const elapsedTime = timer.getElapsed()
+
+        const scrollAnimation = Math.min(scrollPosition, 2);
+
+        camera.position.x = - scrollAnimation * 3;
+        camera.position.y = scrollAnimation * 2
 
         world.step();
 

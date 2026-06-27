@@ -23,14 +23,14 @@ async function loadAssets() {
 
     const textures = {
         plane: {
-            color: await textureLoader.loadAsync('textures/hero/moon_03_1k/moon_03_diff_1k.png'),
-            normal: await textureLoader.loadAsync('textures/hero/moon_03_1k/moon_03_nor_gl_1k.png'),
-            arm: await textureLoader.loadAsync('textures/hero/moon_03_1k/moon_03_arm_1k.png'),
+            color: await textureLoader.loadAsync('textures/cave_hero/moon_03_1k/moon_03_diff_1k.png'),
+            normal: await textureLoader.loadAsync('textures/cave_hero/moon_03_1k/moon_03_nor_gl_1k.png'),
+            arm: await textureLoader.loadAsync('textures/cave_hero/moon_03_1k/moon_03_arm_1k.png'),
         },
         text: {
-            color: await textureLoader.loadAsync('textures/hero/rusty_metal_04_1k/rusty_metal_04_diff_1k.png'),
-            normal: await textureLoader.loadAsync('textures/hero/rusty_metal_04_1k/rusty_metal_04_nor_gl_1k.png'),
-            arm: await textureLoader.loadAsync('textures/hero/rusty_metal_04_1k/rusty_metal_04_arm_1k.png'),
+            color: await textureLoader.loadAsync('textures/cave_hero/rusty_metal_04_1k/rusty_metal_04_diff_1k.png'),
+            normal: await textureLoader.loadAsync('textures/cave_hero/rusty_metal_04_1k/rusty_metal_04_nor_gl_1k.png'),
+            arm: await textureLoader.loadAsync('textures/cave_hero/rusty_metal_04_1k/rusty_metal_04_arm_1k.png'),
         }
     }
 
@@ -92,12 +92,11 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
 
     const text = new THREE.Group();
     scene.add(text);
-    text.position.y = 0.5;
 
     const title = new THREE.Mesh(
-        new TextGeometry("Mateusz\nPodlasin", {
+        new TextGeometry("React\nTypeScript\nThree.js", {
             font: fonts.hero,
-            size: 1,
+            size: 0.7,
 	        depth: 0.2,
 	        curveSegments: 12,
             bevelEnabled: true,
@@ -117,31 +116,6 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
     title.castShadow = true;
     title.receiveShadow = true;
     text.add(title);
-
-    const subtitle = new THREE.Mesh(
-        new TextGeometry("React / TypeScript / Three.js", {
-            font: fonts.hero,
-            size: 0.29,
-	        depth: 0.2,
-	        curveSegments: 12,
-            bevelEnabled: true,
-            bevelSegments: 24,
-            bevelSize: 0.01,
-            bevelThickness: 0.01,
-        }),
-        new THREE.MeshStandardMaterial({
-            map: textures.text.color,
-            normalMap: textures.text.normal,
-            aoMap: textures.text.arm,
-            roughnessMap: textures.text.arm,
-            metalnessMap: textures.text.arm,
-        })
-    );
-    subtitle.geometry.center();
-    subtitle.castShadow = true;
-    subtitle.receiveShadow = true;
-    subtitle.position.y = -1.9;
-    text.add(subtitle);
     
     /* LAMPS */
 
