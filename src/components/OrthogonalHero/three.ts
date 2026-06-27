@@ -48,7 +48,7 @@ async function loadAssets() {
 
     const fontLoader = new FontLoader();
     const fonts = {
-        hero: await fontLoader.loadAsync('fonts/helvetiker_regular.typeface.json'),
+        hero: await fontLoader.loadAsync('/fonts/helvetiker_regular.typeface.json'),
     };
 
     return { textures, fonts }

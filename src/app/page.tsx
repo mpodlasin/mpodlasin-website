@@ -1,19 +1,11 @@
-import CaveHero from "@/components/CaveHero";
-import OrthogonalHero from "@/components/OrthogonalHero";
 import css from './page.module.css';
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div className={css.wrapper}>
-      <div className={css.orthogonalContainer}>
-        <OrthogonalHero />
-      </div>
-      <div className={css.caveContainer}>
-        <CaveHero />
-        <div className={css.caveHeroHint}>
-            <div>Click on the page to turn flashlight on.</div>
-        </div>
-      </div>
+      <Link href="/demos/orthographic-hero">Orthographic Hero</Link>
+      <Link href="/demos/cave-hero">Cave Hero</Link>
     </div>
   );
 }
