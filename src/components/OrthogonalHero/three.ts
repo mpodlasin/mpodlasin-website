@@ -85,7 +85,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
     textures.velvet.arm.wrapS = THREE.RepeatWrapping;
     textures.velvet.arm.wrapT = THREE.RepeatWrapping;
 
-    const nameGeometry = new TextGeometry("Mateusz", {
+    const nameGeometry = new TextGeometry("Hello", {
             font: fonts.hero,
             size: 1,
 	        depth: 0.2,
@@ -96,7 +96,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
             bevelThickness: 0.05,
         });
 
-    const surnameGeometry = new TextGeometry("Podlasin", {
+    const surnameGeometry = new TextGeometry("World", {
             font: fonts.hero,
             size: 1,
 	        depth: 0.2,
@@ -143,6 +143,9 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
     surname.receiveShadow = true;
 
     const cubeMaterial = new THREE.MeshStandardMaterial({ color: 'orange' });
+
+    const ambientLight = new THREE.AmbientLight('white', 0.2);
+    scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight('white', 8)
     directionalLight.position.z = 5;
@@ -233,6 +236,8 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
         .setTranslation(surname.position.x, surname.position.y, surname.position.z);
     world.createCollider(surnameColliderDesc);
 
+    camera.position.y = 1;
+
     const timer = new THREE.Timer();
 
     let scrollPosition = 0;
@@ -252,10 +257,12 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
         timer.update();
         const elapsedTime = timer.getElapsed()
 
-        const scrollAnimation = Math.min(scrollPosition, 2);
+        const scrollAnimation = scrollPosition;
+        camera.position.x = Math.sin(scrollAnimation * Math.PI) * 5;
+        camera.position.z = Math.cos(scrollAnimation * Math.PI) * 5;
 
-        camera.position.x = - scrollAnimation * 3;
-        camera.position.y = scrollAnimation * 2
+        directionalLight.position.x = Math.sin(scrollAnimation * Math.PI) * 5;
+        directionalLight.position.z = Math.cos(scrollAnimation * Math.PI) * 5;
 
         world.step();
 
