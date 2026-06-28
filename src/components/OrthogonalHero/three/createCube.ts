@@ -11,9 +11,9 @@ type CreateCubeArguments = {
 export default function createCubeFactory({ world, scene, RAPIER, surname }: CreateCubeArguments) {
     const cubeMaterial = new THREE.MeshStandardMaterial({ color: 'orange' });
 
-    const shapes: THREE.Mesh[] = [];
-    const bodies: RigidBody[] = [];
-    const colliders: Collider[] = [];
+    let shapes: THREE.Mesh[] = [];
+    let bodies: RigidBody[] = [];
+    let colliders: Collider[] = [];
 
     async function createCube() {
         const size = 0.1;
@@ -36,6 +36,25 @@ export default function createCubeFactory({ world, scene, RAPIER, surname }: Cre
         colliders.push(collider);
 
         bodies.push(rigidBody);
+
+        const crossing = -3;
+        const bodiesWithIndexes = bodies.map((body, index) => [body, index] as const);
+        const fallenBodies = bodiesWithIndexes.filter(([body]) => body.translation().y < crossing)
+        const survivedBodies = bodiesWithIndexes.filter(([body]) => body.translation().y >= crossing)
+        const fallenBodiesIndexes = fallenBodies.map(([_, index]) => index);
+        const survivedBodiesIndexes = survivedBodies.map(([_, index]) => index);
+
+        fallenBodies.forEach(([body]) => world.removeRigidBody(body));
+        colliders
+            .filter((_, index) => fallenBodiesIndexes.includes(index))
+            .forEach(collider => world.removeCollider(collider, false));
+        shapes
+            .filter((_, index) => fallenBodiesIndexes.includes(index))
+            .forEach(shape => scene.remove(shape));
+
+        bodies = survivedBodies.map(([body]) => body);
+        colliders = colliders.filter((_, index) => survivedBodiesIndexes.includes(index));
+        shapes = shapes.filter((_, index) => survivedBodiesIndexes.includes(index));
 
         if (bodies.length > 100) {
             const body = bodies.shift()

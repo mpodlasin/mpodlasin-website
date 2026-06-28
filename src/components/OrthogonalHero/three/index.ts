@@ -1,9 +1,7 @@
-import * as THREE from 'three';
 import setupScene from './setupScene';
 import loadAssets from './loadAssets';
 import createText from './createText';
 import createCubeFactory from './createCube';
-import { setInterval } from 'node:timers';
 import setupTextCollision from './setupTextCollisions';
 import setupLights from './setupLights';
 import setupGui from './setupGui';
@@ -20,7 +18,7 @@ export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (f
     scene.add(text);
 
     const { createCube, cubeMaterial, updateCubes } = createCubeFactory({ world, scene, RAPIER, surname })
-    const intervalId = setInterval(createCube, 500);
+    const intervalId = setInterval(createCube, 100);
     onUnmount(() => clearInterval(intervalId));
 
     setupTextCollision({ RAPIER, world, name, surname });
