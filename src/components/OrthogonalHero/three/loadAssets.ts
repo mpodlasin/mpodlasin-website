@@ -7,10 +7,10 @@ export default async function loadAssets() {
   const textures = {
     velvet: {
       normal: await textureLoader.loadAsync(
-        "/textures/orthogonal_hero/velour_velvet_1k/velour_velvet_nor_gl_1k.png",
+        "/textures/orthogonal_hero/velour_velvet_1k/velour_velvet_nor_gl_1k.jpg",
       ),
       arm: await textureLoader.loadAsync(
-        "/textures/orthogonal_hero/velour_velvet_1k/velour_velvet_arm_1k.png",
+        "/textures/orthogonal_hero/velour_velvet_1k/velour_velvet_arm_1k.jpg",
       ),
     },
   };
