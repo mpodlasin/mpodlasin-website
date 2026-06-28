@@ -1,14 +1,14 @@
 .caveContainer {
-    position: relative;
-    height: 100vh;
+  position: relative;
+  height: 100vh;
 }
 
 .caveHeroHint {
-    color: gray;
-    position: absolute;
-    bottom: 80; 
-    text-align: center;
-    left: 0;
-    right: 0;
-    font-size: 30px;
+  color: gray;
+  position: absolute;
+  bottom: 80;
+  text-align: center;
+  left: 0;
+  right: 0;
+  font-size: 30px;
 }

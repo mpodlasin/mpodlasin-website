@@ -1,10 +1,10 @@
-'use client'
+"use client";
 
-import heroThree from './three';
-import ThreeJSCanvas from '../ThreeJSCanvas';
+import heroThree from "./three";
+import ThreeJSCanvas from "../ThreeJSCanvas";
 
 const OrthogonalHero = () => {
-    return <ThreeJSCanvas threeJSFunction={heroThree} />
-}
+  return <ThreeJSCanvas threeJSFunction={heroThree} />;
+};
 
 export default OrthogonalHero;

@@ -1,69 +1,78 @@
-import setupScene from './setupScene';
-import loadAssets from './loadAssets';
-import createText from './createText';
-import createCubeFactory from './createCube';
-import setupTextCollision from './setupTextCollisions';
-import setupLights from './setupLights';
-import setupGui from './setupGui';
+import setupScene from "./setupScene";
+import loadAssets from "./loadAssets";
+import createText from "./createText";
+import createCubeFactory from "./createCube";
+import setupTextCollision from "./setupTextCollisions";
+import setupLights from "./setupLights";
+import setupGui from "./setupGui";
 
-export default async function heroThree(canvas: HTMLCanvasElement, onUnmount: (fn: () => void) => void) {
-    const { scene, camera, renderer, gui, controls, RAPIER, world } = await setupScene(canvas);
+export default async function heroThree(
+  canvas: HTMLCanvasElement,
+  onUnmount: (fn: () => void) => void,
+) {
+  const { scene, camera, renderer, gui, controls, RAPIER, world } =
+    await setupScene(canvas);
 
-    const { textures, fonts } = await loadAssets();
+  const { textures, fonts } = await loadAssets();
 
-    const { ambientLight, directionalLight } = setupLights();
-    scene.add(ambientLight, directionalLight);
+  const { ambientLight, directionalLight } = setupLights();
+  scene.add(ambientLight, directionalLight);
 
-    const { text, name, surname } = createText({ textures, fonts });
-    scene.add(text);
+  const { text, name, surname } = createText({ textures, fonts });
+  scene.add(text);
 
-    const { createCube, cubeMaterial, updateCubes } = createCubeFactory({ world, scene, RAPIER, surname })
-    const intervalId = setInterval(createCube, 100);
-    onUnmount(() => clearInterval(intervalId));
+  const { createCube, cubeMaterial, updateCubes } = createCubeFactory({
+    world,
+    scene,
+    RAPIER,
+    surname,
+  });
+  const intervalId = setInterval(createCube, 100);
+  onUnmount(() => clearInterval(intervalId));
 
-    setupTextCollision({ RAPIER, world, name, surname });
+  setupTextCollision({ RAPIER, world, name, surname });
 
-    setupGui({ gui, name, cubeMaterial, directionalLight, controls });
-    
-    camera.position.z = 10;
-    camera.position.y = 1;
+  setupGui({ gui, name, cubeMaterial, directionalLight, controls });
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
+  camera.position.z = 10;
+  camera.position.y = 1;
 
-    let scrollPosition = 0;
-    const updateScrollPosition = () => {
-        scrollPosition = window.scrollY / window.innerHeight;
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
 
-        if(scrollPosition < 2) {
-            canvas.style.setProperty('top', `${window.scrollY}px`);
-        }
+  let scrollPosition = 0;
+  const updateScrollPosition = () => {
+    scrollPosition = window.scrollY / window.innerHeight;
+
+    if (scrollPosition < 2) {
+      canvas.style.setProperty("top", `${window.scrollY}px`);
     }
-    window.addEventListener('scroll', updateScrollPosition);
-    onUnmount(() => window.removeEventListener('scroll', updateScrollPosition));
+  };
+  window.addEventListener("scroll", updateScrollPosition);
+  onUnmount(() => window.removeEventListener("scroll", updateScrollPosition));
 
-    let requestAnimationFrameId: number | null = null;
-    function tick() {
-        camera.position.x = Math.sin(scrollPosition * Math.PI) * 5;
-        camera.position.z = Math.cos(scrollPosition * Math.PI) * 5;
+  let requestAnimationFrameId: number | null = null;
+  function tick() {
+    camera.position.x = Math.sin(scrollPosition * Math.PI) * 5;
+    camera.position.z = Math.cos(scrollPosition * Math.PI) * 5;
 
-        directionalLight.position.x = Math.sin(scrollPosition * Math.PI) * 5;
-        directionalLight.position.z = Math.cos(scrollPosition * Math.PI) * 5;
+    directionalLight.position.x = Math.sin(scrollPosition * Math.PI) * 5;
+    directionalLight.position.z = Math.cos(scrollPosition * Math.PI) * 5;
 
-        world.step();
+    world.step();
 
-        updateCubes();
+    updateCubes();
 
-        controls.update();
-        renderer.render(scene, camera);
-        requestAnimationFrameId = requestAnimationFrame(tick);
+    controls.update();
+    renderer.render(scene, camera);
+    requestAnimationFrameId = requestAnimationFrame(tick);
+  }
+
+  onUnmount(() => {
+    if (requestAnimationFrameId !== null) {
+      cancelAnimationFrame(requestAnimationFrameId);
     }
+  });
 
-    onUnmount(() => {
-        if (requestAnimationFrameId !== null) {
-            cancelAnimationFrame(requestAnimationFrameId);
-        }
-    })
-
-    tick();
+  tick();
 }
