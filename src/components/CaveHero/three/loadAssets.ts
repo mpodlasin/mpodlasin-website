@@ -8,24 +8,24 @@ export default async function loadAssets() {
   const textures = {
     plane: {
       color: await textureLoader.loadAsync(
-        "/textures/cave_hero/moon_03_1k/moon_03_diff_1k.png",
+        "/textures/cave_hero/moon_03_1k/moon_03_diff_1k.jpg",
       ),
       normal: await textureLoader.loadAsync(
-        "/textures/cave_hero/moon_03_1k/moon_03_nor_gl_1k.png",
+        "/textures/cave_hero/moon_03_1k/moon_03_nor_gl_1k.jpg",
       ),
       arm: await textureLoader.loadAsync(
-        "/textures/cave_hero/moon_03_1k/moon_03_arm_1k.png",
+        "/textures/cave_hero/moon_03_1k/moon_03_arm_1k.jpg",
       ),
     },
     text: {
       color: await textureLoader.loadAsync(
-        "/textures/cave_hero/rusty_metal_04_1k/rusty_metal_04_diff_1k.png",
+        "/textures/cave_hero/rusty_metal_04_1k/rusty_metal_04_diff_1k.jpg",
       ),
       normal: await textureLoader.loadAsync(
-        "/textures/cave_hero/rusty_metal_04_1k/rusty_metal_04_nor_gl_1k.png",
+        "/textures/cave_hero/rusty_metal_04_1k/rusty_metal_04_nor_gl_1k.jpg",
       ),
       arm: await textureLoader.loadAsync(
-        "/textures/cave_hero/rusty_metal_04_1k/rusty_metal_04_arm_1k.png",
+        "/textures/cave_hero/rusty_metal_04_1k/rusty_metal_04_arm_1k.jpg",
       ),
     },
   };

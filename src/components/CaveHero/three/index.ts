@@ -41,7 +41,6 @@ export default async function heroThree(
     spotLight,
     spotLight.target,
   );
-  /* MISC */
 
   camera.position.z = 8;
   renderer.setSize(window.innerWidth, window.innerHeight);
