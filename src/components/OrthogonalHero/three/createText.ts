@@ -70,6 +70,7 @@ export default function createText({
   surname.position.z = 0.5;
   surname.castShadow = true;
   surname.receiveShadow = true;
+  surname.geometry.computeBoundingBox();
 
   return {
     text,

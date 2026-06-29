@@ -32,7 +32,7 @@ export default function createCubeFactory({
     shapes.push(cube);
 
     const rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic().setTranslation(
-      (Math.random() * 2 - 1) * 2.5,
+      (Math.random() * 2 - 1) * (surname.geometry.boundingBox?.max.x ?? 2.5),
       5,
       Math.random() > 0.5 ? 0 : surname.position.z,
     );
