@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import GUI from "lil-gui";
+import ResourceTracker from "@/utils/ResourceTracker";
 
 export default async function setupScene(canvas: HTMLCanvasElement) {
   const gui = new GUI();
@@ -29,6 +30,16 @@ export default async function setupScene(canvas: HTMLCanvasElement) {
 
   const gravity = { x: 0.0, y: -9.81, z: 0.0 };
   const world = new RAPIER.World(gravity);
+  const resourceTracker = new ResourceTracker();
 
-  return { scene, camera, renderer, gui, controls, RAPIER, world };
+  return {
+    scene,
+    camera,
+    renderer,
+    gui,
+    controls,
+    RAPIER,
+    world,
+    resourceTracker,
+  };
 }

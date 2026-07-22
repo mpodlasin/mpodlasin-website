@@ -11,15 +11,30 @@ export default async function heroThree(
   onUnmount: (fn: () => void) => void,
   onLoadingProgress: (progress: number) => void,
 ) {
-  const { scene, camera, renderer, gui, controls, RAPIER, world } =
-    await setupScene(canvas);
+  const {
+    scene,
+    camera,
+    renderer,
+    gui,
+    controls,
+    RAPIER,
+    world,
+    resourceTracker,
+  } = await setupScene(canvas);
 
-  const { textures, fonts } = await loadAssets(onLoadingProgress);
+  const { textures, fonts } = await loadAssets({
+    onLoadingProgress,
+    resourceTracker,
+  });
 
-  const { ambientLight, directionalLight } = setupLights();
+  const { ambientLight, directionalLight } = setupLights({ resourceTracker });
   scene.add(ambientLight, directionalLight);
 
-  const { text, name, surname } = createText({ textures, fonts });
+  const { text, name, surname } = createText({
+    textures,
+    fonts,
+    resourceTracker,
+  });
   scene.add(text);
 
   const { createCube, cubeMaterial, updateCubes } = createCubeFactory({
@@ -27,6 +42,7 @@ export default async function heroThree(
     scene,
     RAPIER,
     surname,
+    resourceTracker,
   });
   const intervalId = setInterval(createCube, 100);
   onUnmount(() => clearInterval(intervalId));
@@ -73,6 +89,8 @@ export default async function heroThree(
     if (requestAnimationFrameId !== null) {
       cancelAnimationFrame(requestAnimationFrameId);
     }
+
+    world.free();
   });
 
   tick();

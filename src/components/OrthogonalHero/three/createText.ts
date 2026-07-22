@@ -2,11 +2,19 @@ import * as THREE from "three";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js";
 import loadAssets from "./loadAssets";
+import ResourceTracker from "@/utils/ResourceTracker";
+
+type CreateTextArgs = {
+  textures: Awaited<ReturnType<typeof loadAssets>>["textures"];
+  fonts: Awaited<ReturnType<typeof loadAssets>>["fonts"];
+  resourceTracker: ResourceTracker;
+};
 
 export default function createText({
   textures,
   fonts,
-}: Awaited<ReturnType<typeof loadAssets>>) {
+  resourceTracker,
+}: CreateTextArgs) {
   const velvetRepeats = 0.5;
   textures.velvet.normal.repeat.setScalar(velvetRepeats);
   textures.velvet.normal.wrapS = THREE.RepeatWrapping;
@@ -71,6 +79,12 @@ export default function createText({
   surname.castShadow = true;
   surname.receiveShadow = true;
   surname.geometry.computeBoundingBox();
+
+  resourceTracker.track(textMaterial);
+  resourceTracker.track(nameGeometry);
+  resourceTracker.track(surnameGeometry);
+  resourceTracker.track(nameGeometryMerged);
+  resourceTracker.track(surnameGeometryMerged);
 
   return {
     text,

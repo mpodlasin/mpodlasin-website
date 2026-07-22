@@ -1,3 +1,4 @@
+import ResourceTracker from "@/utils/ResourceTracker";
 import { Collider, RigidBody, World } from "@dimforge/rapier3d";
 import * as THREE from "three";
 
@@ -6,6 +7,7 @@ type CreateCubeArguments = {
   surname: THREE.Mesh;
   world: World;
   RAPIER: typeof import("@dimforge/rapier3d");
+  resourceTracker: ResourceTracker;
 };
 
 export default function createCubeFactory({
@@ -13,20 +15,21 @@ export default function createCubeFactory({
   scene,
   RAPIER,
   surname,
+  resourceTracker,
 }: CreateCubeArguments) {
   const cubeMaterial = new THREE.MeshStandardMaterial({ color: "orange" });
+  const size = 0.1;
+  const cubeGeometry = new THREE.BoxGeometry(size, size, size);
+
+  resourceTracker.track(cubeMaterial);
+  resourceTracker.track(cubeGeometry);
 
   let shapes: THREE.Mesh[] = [];
   let bodies: RigidBody[] = [];
   let colliders: Collider[] = [];
 
   async function createCube() {
-    const size = 0.1;
-
-    const cube = new THREE.Mesh(
-      new THREE.BoxGeometry(size, size, size),
-      cubeMaterial,
-    );
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     cube.castShadow = true;
     scene.add(cube);
     shapes.push(cube);
