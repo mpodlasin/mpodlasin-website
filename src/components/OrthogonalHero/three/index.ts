@@ -9,11 +9,12 @@ import setupGui from "./setupGui";
 export default async function heroThree(
   canvas: HTMLCanvasElement,
   onUnmount: (fn: () => void) => void,
+  onLoadingProgress: (progress: number) => void,
 ) {
   const { scene, camera, renderer, gui, controls, RAPIER, world } =
     await setupScene(canvas);
 
-  const { textures, fonts } = await loadAssets();
+  const { textures, fonts } = await loadAssets(onLoadingProgress);
 
   const { ambientLight, directionalLight } = setupLights();
   scene.add(ambientLight, directionalLight);

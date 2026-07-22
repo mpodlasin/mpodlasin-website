@@ -10,10 +10,11 @@ import setupGui from "./setupGui";
 export default async function heroThree(
   canvas: HTMLCanvasElement,
   onUnmount: (fn: () => void) => void,
+  onLoadedProgress: (progress: number) => void,
 ) {
   const { scene, camera, renderer, gui } = setupScene(canvas);
 
-  const { textures, fonts, models } = await loadAssets();
+  const { textures, fonts, models } = await loadAssets(onLoadedProgress);
 
   const { plane } = createWall({ textures });
   scene.add(plane);
