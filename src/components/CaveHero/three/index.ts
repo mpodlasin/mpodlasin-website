@@ -25,7 +25,7 @@ export default async function heroThree(
   const { text } = createText({ textures, fonts, resourceTracker });
   scene.add(text);
 
-  const { lampA, lampB } = createLamps({ models });
+  const { lampA, lampB } = createLamps({ models, resourceTracker });
   scene.add(lampA, lampB);
 
   const {
