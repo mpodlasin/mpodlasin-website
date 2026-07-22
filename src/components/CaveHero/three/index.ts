@@ -10,16 +10,19 @@ import setupGui from "./setupGui";
 export default async function heroThree(
   canvas: HTMLCanvasElement,
   onUnmount: (fn: () => void) => void,
-  onLoadedProgress: (progress: number) => void,
+  onLoadingProgress: (progress: number) => void,
 ) {
-  const { scene, camera, renderer, gui } = setupScene(canvas);
+  const { scene, camera, renderer, gui, resourceTracker } = setupScene(canvas);
 
-  const { textures, fonts, models } = await loadAssets(onLoadedProgress);
+  const { textures, fonts, models } = await loadAssets({
+    onLoadingProgress,
+    resourceTracker,
+  });
 
-  const { plane } = createWall({ textures });
+  const { plane } = createWall({ textures, resourceTracker });
   scene.add(plane);
 
-  const { text } = createText({ textures, fonts });
+  const { text } = createText({ textures, fonts, resourceTracker });
   scene.add(text);
 
   const { lampA, lampB } = createLamps({ models });
@@ -33,7 +36,7 @@ export default async function heroThree(
     pointLightB,
     colors,
     intensity,
-  } = createLights({ lampA, lampB });
+  } = createLights({ lampA, lampB, resourceTracker });
   scene.add(
     ambientLight,
     directionalLight,
@@ -197,6 +200,8 @@ export default async function heroThree(
     if (requestAnimationFrameId !== null) {
       cancelAnimationFrame(requestAnimationFrameId);
     }
+
+    resourceTracker.disposeAll();
   });
 
   tick();

@@ -1,11 +1,17 @@
+import ResourceTracker from "@/utils/ResourceTracker";
 import * as THREE from "three";
 
 type CreateLightsArguments = {
   lampA: THREE.Object3D;
   lampB: THREE.Object3D;
+  resourceTracker: ResourceTracker;
 };
 
-export default function createLights({ lampA, lampB }: CreateLightsArguments) {
+export default function createLights({
+  lampA,
+  lampB,
+  resourceTracker,
+}: CreateLightsArguments) {
   const colors = {
     ambientLightColor: "#f2f9ff",
     directionalLightColor: "#c8d9ff",
@@ -66,6 +72,12 @@ export default function createLights({ lampA, lampB }: CreateLightsArguments) {
   spotLight.shadow.mapSize.height = 1024 * 2;
   spotLight.penumbra = 0.1;
   spotLight.angle = 1.2;
+
+  resourceTracker.track(ambientLight);
+  resourceTracker.track(directionalLight);
+  resourceTracker.track(pointLightA);
+  resourceTracker.track(pointLightB);
+  resourceTracker.track(spotLight);
 
   return {
     ambientLight,

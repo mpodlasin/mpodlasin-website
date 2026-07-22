@@ -1,13 +1,19 @@
 import * as THREE from "three";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import loadAssets from "./loadAssets";
+import ResourceTracker from "@/utils/ResourceTracker";
 
 type CreateTextArguments = {
   textures: Awaited<ReturnType<typeof loadAssets>>["textures"];
   fonts: Awaited<ReturnType<typeof loadAssets>>["fonts"];
+  resourceTracker: ResourceTracker;
 };
 
-export default function createText({ textures, fonts }: CreateTextArguments) {
+export default function createText({
+  textures,
+  fonts,
+  resourceTracker,
+}: CreateTextArguments) {
   textures.text.color.colorSpace = THREE.SRGBColorSpace;
 
   const textTextureRepeat = 0.2;
@@ -44,6 +50,9 @@ export default function createText({ textures, fonts }: CreateTextArguments) {
   title.castShadow = true;
   title.receiveShadow = true;
   text.add(title);
+
+  resourceTracker.track(title.geometry);
+  resourceTracker.track(title.material);
 
   return { text };
 }

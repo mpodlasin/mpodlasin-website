@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import GUI from "lil-gui";
+import ResourceTracker from "@/utils/ResourceTracker";
 
 export default function setupScene(canvas: HTMLCanvasElement) {
   const gui = new GUI();
@@ -14,8 +15,9 @@ export default function setupScene(canvas: HTMLCanvasElement) {
     canvas: canvas,
     antialias: true,
   });
+  const resourceTracker = new ResourceTracker();
 
   gui.hide();
 
-  return { scene, camera, renderer, gui };
+  return { scene, camera, renderer, gui, resourceTracker };
 }

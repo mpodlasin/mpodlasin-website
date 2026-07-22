@@ -1,11 +1,16 @@
 import * as THREE from "three";
 import loadAssets from "./loadAssets";
+import ResourceTracker from "@/utils/ResourceTracker";
 
 type CreateWallArguments = {
   textures: Awaited<ReturnType<typeof loadAssets>>["textures"];
+  resourceTracker: ResourceTracker;
 };
 
-export default function createWall({ textures }: CreateWallArguments) {
+export default function createWall({
+  textures,
+  resourceTracker,
+}: CreateWallArguments) {
   textures.plane.color.colorSpace = THREE.SRGBColorSpace;
 
   textures.plane.color.repeat.set(2, 1);
@@ -27,6 +32,9 @@ export default function createWall({ textures }: CreateWallArguments) {
     }),
   );
   plane.receiveShadow = true;
+
+  resourceTracker.track(plane.material);
+  resourceTracker.track(plane.geometry);
 
   return { plane };
 }
