@@ -1,6 +1,6 @@
 import Starter from "@/components/Starter";
 
-export default function BlobPage() {
+export default function StarterPage() {
   return (
     <div>
       <Starter />
