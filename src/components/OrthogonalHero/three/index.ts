@@ -54,7 +54,6 @@ export default async function heroThree(
   camera.position.z = 10;
   camera.position.y = 1;
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
 
   let scrollPosition = 0;
@@ -67,6 +66,24 @@ export default async function heroThree(
   };
   window.addEventListener("scroll", updateScrollPosition);
   onUnmount(() => window.removeEventListener("scroll", updateScrollPosition));
+
+  const setSize = () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    let ratio = 300;
+    if (window.innerWidth < 600) {
+      ratio = 200;
+    }
+
+    camera.left = window.innerWidth / -ratio;
+    camera.right = window.innerWidth / ratio;
+    camera.top = window.innerHeight / ratio;
+    camera.bottom = window.innerHeight / -ratio;
+    camera.updateProjectionMatrix();
+  };
+  setSize();
+  window.addEventListener("resize", setSize);
+  onUnmount(() => window.removeEventListener("resize", setSize));
 
   let requestAnimationFrameId: number | null = null;
   function tick() {
