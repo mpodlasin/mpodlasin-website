@@ -5,6 +5,7 @@ import CustomShaderMaterial from "three-custom-shader-material/vanilla";
 import setupLights from "./setupLights";
 import setupGui from "./setupGui";
 import blobVertexShader from "../../../shaders/blob/vertex.glsl";
+import blobFragmentShader from "../../../shaders/blob/fragment.glsl";
 
 export default async function blobThree(
   canvas: HTMLCanvasElement,
@@ -19,31 +20,32 @@ export default async function blobThree(
     resourceTracker,
   });
 
+  const geometry = new THREE.SphereGeometry(1, 200, 200);
+  geometry.computeTangents();
   const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 100, 100),
+    geometry,
     new CustomShaderMaterial({
       baseMaterial: THREE.MeshPhysicalMaterial,
       vertexShader: blobVertexShader,
+      fragmentShader: blobFragmentShader,
 
       uniforms: {
         uTime: new THREE.Uniform(0),
+        uShift: new THREE.Uniform(0.5),
+        uFrequency: new THREE.Uniform(2),
+        uAmplitude: new THREE.Uniform(0.2),
       },
 
-      color: "teal",
-      normalMap: textures.velvet.normal,
-      roughnessMap: textures.velvet.arm,
-      metalnessMap: textures.velvet.arm,
-      aoMap: textures.velvet.arm,
+      metalness: 0.3,
+      roughness: 0.5,
     }),
   );
-  sphere.geometry.computeTangents();
-  console.log(sphere.geometry.attributes);
   scene.add(sphere);
 
   const { ambientLight, directionalLight } = setupLights({ resourceTracker });
   scene.add(ambientLight, directionalLight);
 
-  setupGui({ gui, directionalLight, controls });
+  setupGui({ gui, directionalLight, controls, sphere });
 
   camera.position.z = 5;
 

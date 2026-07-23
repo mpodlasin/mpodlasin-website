@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     rules: {
       "*.glsl": {
-        loaders: ["webpack-glsl-loader"],
+        loaders: ["raw-loader", "glslify-loader"],
         as: "*.js",
       },
     },

@@ -91,3 +91,5 @@ float simplexNoise4d(vec4 v){
                + dot(m1*m1, vec2( dot( p3, x3 ), dot( p4, x4 ) ) ) ) ;
 
 }
+
+#pragma glslify: export(simplexNoise4d);
