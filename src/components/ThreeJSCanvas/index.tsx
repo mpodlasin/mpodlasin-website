@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import css from './index.module.css';
 
 type CaveHeroProps = {
+  showLoader?: boolean;
   threeJSFunction: (
     canvas: HTMLCanvasElement,
     onUnmount: (fn: () => void) => void,
@@ -11,7 +12,7 @@ type CaveHeroProps = {
   ) => void;
 };
 
-const ThreeJSCanvas = ({ threeJSFunction }: CaveHeroProps) => {
+const ThreeJSCanvas = ({ threeJSFunction, showLoader = true }: CaveHeroProps) => {
   const canvas = useRef(null);
   const handlers = useRef<(() => void)[]>([]);
 
@@ -34,11 +35,11 @@ const ThreeJSCanvas = ({ threeJSFunction }: CaveHeroProps) => {
 
   return <div className={css.container}>
     <canvas style={{ position: "relative" }} ref={canvas} />
-    <div className={css.mask} style={{opacity: loadingProgress < 1 ? 1 : 0}}>
+    {showLoader && <div className={css.mask} style={{opacity: loadingProgress < 1 ? 1 : 0}}>
       <div className={css.loadingBarWrapper}>
         <div className={css.loadingBar} style={{transform: `scaleX(${loadingProgress})`}} />
       </div>
-    </div>
+    </div>}
     </div>;
 };
 

@@ -8,6 +8,7 @@
     z-index: 10;
     display: flex;
     justify-content: center;
+    pointer-events: none;
 
     transition: opacity 3s;
 }
