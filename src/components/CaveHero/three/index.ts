@@ -47,7 +47,6 @@ export default async function heroThree(
   );
 
   camera.position.z = 8;
-  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
 
@@ -68,17 +67,21 @@ export default async function heroThree(
     y: 0,
   };
   const handleMouseMove = (e: MouseEvent) => {
+    e.preventDefault();
+
     mousePosition.x = e.clientX / window.innerWidth;
     mousePosition.y = e.clientY / window.innerHeight;
   };
-  window.addEventListener("mousemove", handleMouseMove);
+  window.addEventListener("pointermove", handleMouseMove);
   onUnmount(() => {
-    window.removeEventListener("mousemove", handleMouseMove);
+    window.removeEventListener("pointermove", handleMouseMove);
   });
 
   let flashLightOn = false;
   let flashLightMoment = 0;
-  const handleClick = () => {
+  const handleClick = (e: MouseEvent) => {
+    handleMouseMove(e);
+
     flashLightOn = !flashLightOn;
     timer.update();
     flashLightMoment = timer.getElapsed();
@@ -87,6 +90,25 @@ export default async function heroThree(
   onUnmount(() => {
     window.removeEventListener("click", handleClick);
   });
+
+  const setSize = () => {
+    if (window.innerWidth > 700) {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    } else {
+      const aspectRatio = 1.6 / 1;
+
+      renderer.setSize(window.innerWidth, window.innerWidth / aspectRatio);
+
+      camera.aspect = aspectRatio;
+      camera.updateProjectionMatrix();
+    }
+  };
+  setSize();
+  window.addEventListener("resize", setSize);
+  onUnmount(() => window.removeEventListener("resize", setSize));
 
   const animations = {
     flashlightFadeInLength: 0.1,
