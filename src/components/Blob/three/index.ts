@@ -15,10 +15,16 @@ export default async function blobThree(
   const { scene, camera, renderer, gui, controls, resourceTracker } =
     await setupScene(canvas);
 
-  const { textures } = await loadAssets({
+  const { environmentMap } = await loadAssets({
     onLoadingProgress,
     resourceTracker,
   });
+
+  scene.environmentIntensity = 0.6;
+
+  environmentMap.mapping = THREE.EquirectangularReflectionMapping;
+  environmentMap.colorSpace = THREE.SRGBColorSpace;
+  scene.environment = environmentMap;
 
   const geometry = new THREE.SphereGeometry(1, 200, 200);
   geometry.computeTangents();
@@ -31,12 +37,12 @@ export default async function blobThree(
 
       uniforms: {
         uTime: new THREE.Uniform(0),
-        uShift: new THREE.Uniform(0.5),
+        uShift: new THREE.Uniform(0.01),
         uFrequency: new THREE.Uniform(2),
-        uAmplitude: new THREE.Uniform(0.2),
+        uAmplitude: new THREE.Uniform(0.15),
       },
 
-      metalness: 0.3,
+      metalness: 0.99,
       roughness: 0.5,
     }),
   );
@@ -45,7 +51,9 @@ export default async function blobThree(
   const { ambientLight, directionalLight } = setupLights({ resourceTracker });
   scene.add(ambientLight, directionalLight);
 
-  setupGui({ gui, directionalLight, controls, sphere });
+  directionalLight.intensity = 0.3;
+
+  setupGui({ gui, directionalLight, controls, sphere, scene });
 
   camera.position.z = 5;
 
@@ -64,6 +72,8 @@ export default async function blobThree(
   function tick() {
     timer.update();
     const elapsedTime = timer.getElapsed();
+
+    scene.environmentRotation.y = elapsedTime;
 
     sphere.material.uniforms.uTime.value = elapsedTime;
 

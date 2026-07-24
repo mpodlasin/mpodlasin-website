@@ -11,6 +11,7 @@ type SetupGuiArguments = {
     THREE.SphereGeometry,
     CustomShaderMaterial<typeof THREE.MeshPhysicalMaterial>
   >;
+  scene: THREE.Scene;
 };
 
 export default function setupGui({
@@ -18,6 +19,7 @@ export default function setupGui({
   directionalLight,
   controls,
   sphere,
+  scene,
 }: SetupGuiArguments) {
   gui
     .add(directionalLight.position, "x")
@@ -37,6 +39,12 @@ export default function setupGui({
     .max(5)
     .step(0.0001)
     .name("directional - z");
+  gui
+    .add(directionalLight, "intensity")
+    .min(0)
+    .max(10)
+    .step(0.001)
+    .name("directional - intensity");
 
   gui
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,6 +77,8 @@ export default function setupGui({
     .max(1)
     .step(0.0001)
     .name("uShift");
+
+  gui.add(scene, "environmentIntensity").min(0).max(1).step(0.0001);
 
   gui.add(controls, "enabled").name("controls enabled");
 }

@@ -24,10 +24,10 @@ void main() {
 
     vec3 newPosition = csm_Position + csm_Normal * deformationStrength;
 
-    vec3 toA = normalize(neighboorA - newPosition);
-    vec3 toB = normalize(neighboorB - newPosition);
+    vec3 toA = normalize(deformedA - newPosition);
+    vec3 toB = normalize(deformedB - newPosition);
     
-    vec3 newNormal = cross(toA, toB);
+    vec3 newNormal = normalize(cross(toA, toB));
     
     csm_Position = newPosition;
     csm_Normal = newNormal;
