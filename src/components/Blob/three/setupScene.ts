@@ -9,18 +9,20 @@ export default async function setupScene(canvas: HTMLCanvasElement) {
 
   const camera = new THREE.PerspectiveCamera(
     50,
-    window.innerWidth / window.innerHeight,
+    window.innerWidth / 2 / window.innerHeight,
     0.01,
     1000,
   );
 
   const controls = new OrbitControls(camera, canvas);
-  controls.enabled = true;
+  controls.enabled = false;
 
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
     antialias: true,
   });
+
+  gui.hide();
 
   const resourceTracker = new ResourceTracker();
 

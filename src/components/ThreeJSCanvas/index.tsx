@@ -3,16 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import css from './index.module.css';
 
-type CaveHeroProps = {
+type CaveHeroProps<R> = {
   showLoader?: boolean;
   threeJSFunction: (
     canvas: HTMLCanvasElement,
     onUnmount: (fn: () => void) => void,
     onLoadedProgress: (progress: number) => void,
-  ) => void;
+  ) => Promise<R>;
+  onGetReturnValues?: (returnValues: R) => void;
 };
 
-const ThreeJSCanvas = ({ threeJSFunction, showLoader = true }: CaveHeroProps) => {
+function ThreeJSCanvas<R>({ threeJSFunction, onGetReturnValues, showLoader = true }: CaveHeroProps<R>) {
   const canvas = useRef(null);
   const handlers = useRef<(() => void)[]>([]);
 
@@ -25,13 +26,14 @@ const ThreeJSCanvas = ({ threeJSFunction, showLoader = true }: CaveHeroProps) =>
   useEffect(() => {
     if (!canvas.current) return;
 
-    threeJSFunction(canvas.current, addHandler, setLoadingProgress);
+    threeJSFunction(canvas.current, addHandler, setLoadingProgress)
+      .then(onGetReturnValues);
 
     const cleanupFunctions = handlers.current;
     return () => {
       cleanupFunctions.forEach((handler) => handler());
     };
-  }, [threeJSFunction]);
+  }, [threeJSFunction, onGetReturnValues]);
 
   return <div className={css.container}>
     <canvas style={{ position: "relative" }} ref={canvas} />

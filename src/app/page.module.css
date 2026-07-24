@@ -1,11 +1,18 @@
 .wrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  flex-direction: row;
   gap: 16px;
   height: 100vh;
   font-size: 1.5em;
+}
+
+.contentWrapper {
+  width: 50vw;
+  transform: translateX(100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .github {
@@ -13,6 +20,18 @@
   font-size: 0.7em;
 }
 
-.githubLink {
-  text-decoration: underline;
+.link {
+  padding-top: 12px;
+  transition: color 0.5s;
+}
+
+.link:hover {
+  color: lightblue;
+}
+
+.blobWrapper {
+  position: fixed;
+  width: 50vw;
+  z-index: -1;
+  overflow: hidden;
 }

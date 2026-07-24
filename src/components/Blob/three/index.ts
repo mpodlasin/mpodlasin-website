@@ -6,6 +6,7 @@ import setupLights from "./setupLights";
 import setupGui from "./setupGui";
 import blobVertexShader from "../../../shaders/blob/vertex.glsl";
 import blobFragmentShader from "../../../shaders/blob/fragment.glsl";
+import { gsap } from "gsap";
 
 export default async function blobThree(
   canvas: HTMLCanvasElement,
@@ -53,14 +54,28 @@ export default async function blobThree(
 
   directionalLight.intensity = 0.3;
 
+  const functions = {
+    triggerAnimation() {
+      gsap.to(sphere.material.uniforms.uFrequency, {
+        value: Math.random() * 5,
+        duration: 1,
+      });
+
+      gsap.to(sphere.material.uniforms.uAmplitude, {
+        value: Math.random(),
+        duration: 1,
+      });
+    },
+  };
+  gui.add(functions, "triggerAnimation");
   setupGui({ gui, directionalLight, controls, sphere, scene });
 
-  camera.position.z = 5;
+  camera.position.z = 7;
 
   const setSize = () => {
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth / 2, window.innerHeight);
 
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = window.innerWidth / 2 / window.innerHeight;
     camera.updateProjectionMatrix();
   };
   setSize();
@@ -76,8 +91,9 @@ export default async function blobThree(
     scene.environmentRotation.y = elapsedTime;
 
     sphere.material.uniforms.uTime.value = elapsedTime;
+    sphere.rotation.y = elapsedTime * 0.1;
 
-    controls.update();
+    // controls.update();
     renderer.render(scene, camera);
     requestAnimationFrameId = requestAnimationFrame(tick);
   }
@@ -89,4 +105,6 @@ export default async function blobThree(
   });
 
   tick();
+
+  return functions;
 }
