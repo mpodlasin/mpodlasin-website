@@ -20,6 +20,10 @@
   font-size: 0.7em;
 }
 
+.githubLink {
+  text-decoration: underline;
+}
+
 .link {
   padding-top: 12px;
   transition: color 0.5s;

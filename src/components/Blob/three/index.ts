@@ -48,9 +48,13 @@ export default async function blobThree(
     }),
   );
   scene.add(sphere);
+  resourceTracker.track(sphere.material);
+  resourceTracker.track(sphere.geometry);
 
   const { ambientLight, directionalLight } = setupLights({ resourceTracker });
   scene.add(ambientLight, directionalLight);
+  resourceTracker.track(ambientLight);
+  resourceTracker.track(directionalLight);
 
   directionalLight.intensity = 0.3;
 
@@ -102,6 +106,9 @@ export default async function blobThree(
     if (requestAnimationFrameId !== null) {
       cancelAnimationFrame(requestAnimationFrameId);
     }
+
+    resourceTracker.disposeAll();
+    gui.destroy();
   });
 
   tick();
